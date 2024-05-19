@@ -1,0 +1,30 @@
+spring:
+  config:
+    import: file:/glyp-correnem-/cfg/db.yaml
+  datasource:
+    url: ""
+    username: ""
+    password: ""
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        connection:
+          driver_class: org.postgresql.Driver
+        hbm2ddl:
+          create_namespaces: true
+          schema-generation:
+            script:
+              append: false
+        format_sql: false
+      jakarta:
+        persistence:
+          create-database-schemas: true
+          schema-generation:
+            scripts:
+              action: update
+              create-target: "src/main/resources/db/update_ddl.sql"
+              create-source: "metadata"

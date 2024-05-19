@@ -1,0 +1,8 @@
+spring:
+  application:
+    name: "glyp-correnem-base-ms"
+  config:
+    import:
+      - "file:/glyp-correnem-/ms-cfg/db.yaml"
+      - "file:/glyp-correnem-/ms-cfg/eureka-client.yaml"
+      - "file:/glyp-correnem-/ms-cfg/ms-port.yaml"
