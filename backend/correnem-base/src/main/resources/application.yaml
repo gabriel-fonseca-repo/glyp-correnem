@@ -1,0 +1,8 @@
+spring:
+  application:
+    name: "correnem-base-ms"
+  config:
+    import:
+      - "file:/nfembasic/ms-cfg/db.yaml"
+      - "file:/nfembasic/ms-cfg/eureka-client.yaml"
+      - "file:/nfembasic/ms-cfg/ms-port.yaml"
