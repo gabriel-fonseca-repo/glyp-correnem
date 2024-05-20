@@ -1,0 +1,21 @@
+# Esse arquivo deve ser colocado no diretório src/main/resources/db.yaml
+# Crie uma cópia nessa mesma pasta com o nome "db.yaml", e preencha com suas
+# Credenciais do banco
+
+# Para guardar as credenciais fora do projeto (Infra):
+# Basta copiar este arquivo para o diretório /nfembasic/cfg/db.yaml
+# E preencher com as credenciais do banco.
+
+banco:
+  url: "jdbc:postgresql://172..."
+  usuario: ""
+  senha: ""
+spring:
+  flyway:
+    createSchemas: true
+    defaultSchemas: "fwm_${banco.usuario}"
+    schemas: "fwm_${banco.usuario}"
+    table: "flyway_schema_history"
+    repeatable-sql-migration-prefix: R
+    placeholders:
+      usuario_banco: "${banco.usuario}"

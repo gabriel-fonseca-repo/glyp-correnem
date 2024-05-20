@@ -1,0 +1,9 @@
+hmit:
+  banco:
+    host: ""
+    porta:
+    database: ""
+    usuario: ""
+    senha: ""
+  jwt:
+    secret: ""
