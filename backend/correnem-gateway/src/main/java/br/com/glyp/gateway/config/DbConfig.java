@@ -1,11 +1,8 @@
 package br.com.glyp.gateway.config;
 
-import br.com.glyp.msorm.crypto.Crypto;
 import io.r2dbc.postgresql.PostgresqlConnectionConfiguration;
 import io.r2dbc.postgresql.PostgresqlConnectionFactory;
 import io.r2dbc.spi.ConnectionFactory;
-import java.io.UnsupportedEncodingException;
-import java.security.GeneralSecurityException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Value;
@@ -19,41 +16,31 @@ public class DbConfig extends AbstractR2dbcConfiguration {
 
   private static final Logger LOG = LogManager.getLogger(DbConfig.class);
 
-  @Value("${hmit.banco.host}")
+  @Value("${banco.host}")
   private String host;
 
-  @Value("${hmit.banco.porta}")
+  @Value("${banco.porta}")
   private Integer porta;
 
-  @Value("${hmit.banco.database}")
+  @Value("${banco.database}")
   private String banco;
 
-  @Value("${hmit.banco.usuario}")
+  @Value("${banco.usuario}")
   private String usuario;
 
-  @Value("${hmit.banco.senha}")
+  @Value("${banco.senha}")
   private String senha;
 
   @Override
   @Bean
   @NonNull
   public ConnectionFactory connectionFactory() {
-    String senhaDescriptografada = null;
-    try {
-      senhaDescriptografada = new Crypto().decrypt(senha);
-    } catch (GeneralSecurityException | UnsupportedEncodingException e) {
-      LOG.error(
-        "Não foi possível se conectar com o banco: {}, Erro: {}",
-        banco,
-        e.getMessage()
-      );
-    }
     // @formatter:off
     return new PostgresqlConnectionFactory(PostgresqlConnectionConfiguration.builder()
             .host(host)
             .port(porta)
             .username(usuario)
-            .password(senhaDescriptografada)
+            .password(senha)
             .database(banco)
             .build());
     // @formatter:on

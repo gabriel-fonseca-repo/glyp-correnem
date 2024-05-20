@@ -1,9 +1,11 @@
+server:
+    port: 0
+
 spring:
-  application:
-    name: "correnem-usuario-ms"
-  config:
-    import:
-      - "file:/nfembasic/ms-cfg/db.yaml"
-      - "file:/nfembasic/ms-cfg/jwt.yaml"
-      - "file:/nfembasic/ms-cfg/eureka-client.yaml"
-      - "file:/nfembasic/ms-cfg/ms-port.yaml"
+    application:
+        name: "correnem-usuario-ms"
+    config:
+        import:
+            - "file:/correnem/db.yaml"
+            - "file:/correnem/jwt.yaml"
+            - "file:/correnem/eureka-client.yaml"

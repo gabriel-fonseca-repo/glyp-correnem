@@ -1,0 +1,63 @@
+version: "3.8"
+
+services:
+  postgres:
+    image: postgres:15
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+  eureka:
+    build:
+      context: ./backend/correnem-eureka
+    image: glyp-eureka:latest
+    ports:
+      - "8761:8761"
+    volumes:
+      - /correnem:/correnem
+
+  gateway:
+    build:
+      context: ./backend/correnem-gateway
+    image: glyp-gateway:latest
+    depends_on:
+      - eureka
+      - msorm
+    ports:
+      - "8080:8080"
+    volumes:
+      - /correnem:/correnem
+
+  msorm:
+    build:
+      context: ./backend/correnem-msorm
+    image: glyp-msorm:latest
+    depends_on:
+      - postgres
+    volumes:
+      - /correnem:/correnem
+
+  usuario:
+    build:
+      context: ./backend/correnem-usuario
+    image: glyp-usuario:latest
+    depends_on:
+      - eureka
+      - msorm
+    volumes:
+      - /correnem:/correnem
+
+  frontend:
+    build:
+      context: ./frontend
+    image: glyp-correnem:latest
+    ports:
+      - "80:80"
+
+volumes:
+  postgres_data:

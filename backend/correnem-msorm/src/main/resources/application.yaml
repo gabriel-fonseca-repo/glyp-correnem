@@ -1,7 +1,7 @@
 spring:
-  application:
-    name: nfembasic-msorm-ms
-  config:
-    import:
-      - "file:/nfembasic/ms-cfg/db.yaml"
-      - "file:/nfembasic/ms-cfg/jpa.yaml"
+    application:
+        name: nfembasic-msorm-ms
+    config:
+        import:
+            - "file:/correnem/db.yaml"
+            - "file:/correnem/jpa.yaml"

@@ -1,32 +1,40 @@
 package br.com.glyp.msorm.config;
 
-import br.com.glyp.msorm.crypto.Crypto;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
-import javax.sql.DataSource;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import javax.sql.DataSource;
+
 @Configuration
 public class DbConfig {
 
-  @Value("${banco.senha}")
-  private String senha;
+  @Value("${banco.host}")
+  private String host;
 
-  @Value("${banco.url}")
-  private String url;
+  @Value("${banco.porta}")
+  private Integer porta;
+
+  @Value("${banco.database}")
+  private String banco;
 
   @Value("${banco.usuario}")
   private String usuario;
 
+  @Value("${banco.senha}")
+  private String senha;
+
   @Bean
   DataSource getDataSource() throws Exception {
-    Crypto encrypter = new Crypto();
     HikariConfig config = new HikariConfig();
+
+    String url = "jdbc:postgresql://" + host + ":" + porta + "/" + banco;
+
     config.setJdbcUrl(url);
     config.setUsername(usuario);
-    config.setPassword(encrypter.decrypt(senha));
+    config.setPassword(senha);
     return new HikariDataSource(config);
   }
 }
