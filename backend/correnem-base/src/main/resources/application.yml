@@ -1,0 +1,10 @@
+server:
+  port: 0
+
+spring:
+  application:
+    name: "correnem-base-ms"
+  config:
+    import:
+      - "file:/correnem/db.yml"
+      - "file:/correnem/eureka-client.yml"

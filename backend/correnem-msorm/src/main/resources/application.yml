@@ -1,0 +1,7 @@
+spring:
+  application:
+    name: nfembasic-msorm-ms
+  config:
+    import:
+      - "file:/correnem/db.yml"
+      - "file:/correnem/jpa.yml"
