@@ -3,6 +3,7 @@ version: "3.8"
 services:
   postgres:
     image: postgres:15
+    container_name: postgres
     environment:
       POSTGRES_DB: ${POSTGRES_DB}
       POSTGRES_USER: ${POSTGRES_USER}
@@ -16,31 +17,32 @@ services:
     build:
       context: ./backend/correnem-eureka
     image: glyp-eureka:latest
+    container_name: eureka
     ports:
       - "8761:8761"
-    volumes:
-      - /correnem:/correnem
 
   gateway:
     build:
       context: ./backend/correnem-gateway
     image: glyp-gateway:latest
+    container_name: gateway
     depends_on:
       - eureka
       - msorm
     ports:
       - "8080:8080"
     volumes:
-      - /correnem:/correnem
+      - ./backend/msconfig:/correnem
 
   msorm:
     build:
       context: ./backend/correnem-msorm
     image: glyp-msorm:latest
+    container_name: msorm
     depends_on:
       - postgres
     volumes:
-      - /correnem:/correnem
+      - ./backend/msconfig:/correnem
 
   usuario:
     build:
@@ -50,7 +52,7 @@ services:
       - eureka
       - msorm
     volumes:
-      - /correnem:/correnem
+      - ./backend/msconfig:/correnem
 
   frontend:
     build:

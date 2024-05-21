@@ -27,14 +27,17 @@ public class DbConfig {
   private String senha;
 
   @Bean
-  DataSource getDataSource() throws Exception {
+  DataSource getDataSource() {
     HikariConfig config = new HikariConfig();
 
     String url = "jdbc:postgresql://" + host + ":" + porta + "/" + banco;
 
+    System.out.println("URL para conexão com o banco de dados: " + url);
+
     config.setJdbcUrl(url);
     config.setUsername(usuario);
     config.setPassword(senha);
+
     return new HikariDataSource(config);
   }
 }
