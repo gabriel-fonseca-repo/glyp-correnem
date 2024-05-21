@@ -4,3 +4,4 @@ bin/
 .env
 msconfig/
 **/*.iml
+backend/db/**/*
