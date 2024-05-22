@@ -11,7 +11,7 @@ import java.time.OffsetDateTime;
 @Table(name = "tb_usuario", schema = "controle_acesso", uniqueConstraints = {@UniqueConstraint(name = "unqc_cpf", columnNames = {"cpf"}),})
 public class Usuario extends BaseModel {
 
-  public static final String PERFIL_USUARIO_STRING = "USUARIO";
+  public static final String PERFIL_USUARIO_STRING = "'USUARIO'";
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)

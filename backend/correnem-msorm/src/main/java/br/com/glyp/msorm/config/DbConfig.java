@@ -32,8 +32,6 @@ public class DbConfig {
 
     String url = "jdbc:postgresql://" + host + ":" + porta + "/" + banco;
 
-    System.out.println("URL para conexão com o banco de dados: " + url);
-
     config.setJdbcUrl(url);
     config.setUsername(usuario);
     config.setPassword(senha);

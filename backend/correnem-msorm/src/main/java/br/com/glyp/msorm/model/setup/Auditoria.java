@@ -3,13 +3,16 @@ package br.com.glyp.msorm.model.setup;
 import br.com.glyp.msorm.model.Usuario;
 import br.com.glyp.msorm.web.enumeration.SituacaoAuditoria;
 import jakarta.persistence.*;
+import org.hibernate.annotations.ColumnDefault;
+
+import java.io.Serial;
 import java.io.Serializable;
 import java.time.OffsetDateTime;
-import org.hibernate.annotations.ColumnDefault;
 
 @Embeddable
 public class Auditoria implements Serializable {
 
+  @Serial
   private static final long serialVersionUID = -8825832608506274788L;
 
   @Column(insertable = false, updatable = false)
@@ -24,28 +27,28 @@ public class Auditoria implements Serializable {
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(
-    name = "IdUsuarioInclusao",
-    insertable = true,
-    updatable = false,
-    foreignKey = @ForeignKey(name = "fk_usuario_inclusao")
+      name = "IdUsuarioInclusao",
+      insertable = true,
+      updatable = false,
+      foreignKey = @ForeignKey(name = "fk_usuario_inclusao")
   )
   private Usuario usuarioInclusao;
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(
-    name = "IdUsuarioAlteracao",
-    insertable = false,
-    updatable = true,
-    foreignKey = @ForeignKey(name = "fk_usuario_alteracao")
+      name = "IdUsuarioAlteracao",
+      insertable = false,
+      updatable = true,
+      foreignKey = @ForeignKey(name = "fk_usuario_alteracao")
   )
   private Usuario usuarioAlteracao;
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(
-    name = "IdUsuarioAlteracaoSituacao",
-    insertable = false,
-    updatable = true,
-    foreignKey = @ForeignKey(name = "fk_usuario_alteracao_situacao")
+      name = "IdUsuarioAlteracaoSituacao",
+      insertable = false,
+      updatable = true,
+      foreignKey = @ForeignKey(name = "fk_usuario_alteracao_situacao")
   )
   private Usuario usuarioAlteracaoSituacao;
 

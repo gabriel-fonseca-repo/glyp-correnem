@@ -48,6 +48,7 @@ services:
     build:
       context: ./backend/correnem-usuario
     image: glyp-usuario:latest
+    container_name: usuario
     depends_on:
       - eureka
       - msorm
@@ -58,6 +59,7 @@ services:
     build:
       context: ./frontend
     image: glyp-correnem:latest
+    container_name: frontend
     ports:
       - "80:80"
 
