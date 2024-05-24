@@ -33,7 +33,7 @@ public class UsuarioService {
     return usuarioDao.findByEmail(email, UsuarioJwtCreationQuery.class);
   }
 
-  public boolean isCpfOrEmailCadastrados(CadastrarUsuarioRequest req) {
+  public boolean isEmailJaCadastrado(CadastrarUsuarioRequest req) {
     return usuarioDao.isEmailJaCadastrado(req.email());
   }
 

@@ -4,3 +4,4 @@ bin/
 .env
 msconfig/
 **/*.iml
+gcloud-service-account-key.json

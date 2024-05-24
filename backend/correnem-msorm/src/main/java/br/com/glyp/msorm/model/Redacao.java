@@ -20,10 +20,13 @@ public class Redacao extends BaseModel {
   private String title;
 
   @Column
-  private String tema;
+  private String prompt;
 
   @Column(nullable = false, columnDefinition = "TEXT")
   private String text;
+
+  @Column
+  private boolean reviewed = false;
 
   @Column
   private int finalScore;
@@ -46,4 +49,107 @@ public class Redacao extends BaseModel {
   @Column(columnDefinition = "TEXT")
   private String comments;
 
+  public Long getId() {
+    return id;
+  }
+
+  public void setId(Long id) {
+    this.id = id;
+  }
+
+  public Usuario getUsuario() {
+    return usuario;
+  }
+
+  public void setUsuario(Usuario usuario) {
+    this.usuario = usuario;
+  }
+
+  public String getTitle() {
+    return title;
+  }
+
+  public void setTitle(String title) {
+    this.title = title;
+  }
+
+  public String getPrompt() {
+    return prompt;
+  }
+
+  public void setPrompt(String tema) {
+    this.prompt = tema;
+  }
+
+  public String getText() {
+    return text;
+  }
+
+  public void setText(String text) {
+    this.text = text;
+  }
+
+  public boolean isReviewed() {
+    return reviewed;
+  }
+
+  public void setReviewed(boolean reviewed) {
+    this.reviewed = reviewed;
+  }
+
+  public int getFinalScore() {
+    return finalScore;
+  }
+
+  public void setFinalScore(int finalScore) {
+    this.finalScore = finalScore;
+  }
+
+  public int getCriteriaScore1() {
+    return criteriaScore1;
+  }
+
+  public void setCriteriaScore1(int criteriaScore1) {
+    this.criteriaScore1 = criteriaScore1;
+  }
+
+  public int getCriteriaScore2() {
+    return criteriaScore2;
+  }
+
+  public void setCriteriaScore2(int criteriaScore2) {
+    this.criteriaScore2 = criteriaScore2;
+  }
+
+  public int getCriteriaScore3() {
+    return criteriaScore3;
+  }
+
+  public void setCriteriaScore3(int criteriaScore3) {
+    this.criteriaScore3 = criteriaScore3;
+  }
+
+  public int getCriteriaScore4() {
+    return criteriaScore4;
+  }
+
+  public void setCriteriaScore4(int criteriaScore4) {
+    this.criteriaScore4 = criteriaScore4;
+  }
+
+  public int getCriteriaScore5() {
+    return criteriaScore5;
+  }
+
+  public void setCriteriaScore5(int criteriaScore5) {
+    this.criteriaScore5 = criteriaScore5;
+  }
+
+  public String getComments() {
+    return comments;
+  }
+
+  public void setComments(String comments) {
+    this.comments = comments;
+  }
 }

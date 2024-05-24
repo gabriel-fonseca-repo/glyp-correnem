@@ -26,7 +26,7 @@ RUN apt-get update && apt-get install -y \
   gnupg \
   curl
 
-RUN ls -al /
+COPY gcloud-service-account-key.json /gcloud/gcloud-service-account-key.json
 
 # Adicionar a chave do Google Cloud SDK
 RUN echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] https://packages.cloud.google.com/apt cloud-sdk main" | \
@@ -35,8 +35,8 @@ RUN echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] https://packages.
   gpg --no-tty --batch --dearmor --yes -o /usr/share/keyrings/cloud.google.gpg && \
   apt-get update -y && apt-get install google-cloud-sdk -y
 
-ENV GOOGLE_APPLICATION_CREDENTIALS=/correnem/gcloud-service-account-key.json
-RUN gcloud auth activate-service-account --key-file=/correnem/gcloud-service-account-key.json
+ENV GOOGLE_APPLICATION_CREDENTIALS=/gcloud/gcloud-service-account-key.json
+RUN gcloud auth activate-service-account --key-file=/gcloud/gcloud-service-account-key.json
 RUN gcloud init
 
 # Limpar o cache do apt

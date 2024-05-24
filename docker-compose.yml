@@ -3,6 +3,7 @@ version: "3.8"
 # docker-compose --profile system up -d --build # Subir o sistema inteiro
 # docker-compose --profile backend up -d --build # Subir o backend
 # docker-compose --profile frontend up -d --build # Subir o frontend
+# docker-compose --profile database up -d --build # Subir o banco de dados
 
 name: correnem
 
@@ -13,6 +14,7 @@ services:
     profiles:
       - backend
       - system
+      - database
     environment:
       POSTGRES_DB: ${POSTGRES_DB}
       POSTGRES_USER: ${POSTGRES_USER}
@@ -87,6 +89,10 @@ services:
     depends_on:
       - eureka
       - msorm
+    environment:
+      PROJECT_ID: ${PROJECT_ID}
+      LOCATION_ID: ${LOCATION_ID}
+      MODEL_ID: ${MODEL_ID}
     volumes:
       - ./backend/msconfig:/correnem
 

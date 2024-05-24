@@ -31,8 +31,8 @@ public class UsuarioController {
 
       usuarioService.isCadastroFormComCamposInvalidos(req);
 
-      if (usuarioService.isCpfOrEmailCadastrados(req)) {
-        response.setMessage("CPF ou e-mail já cadastrado(s).");
+      if (usuarioService.isEmailJaCadastrado(req)) {
+        response.setMessage("E-mail já cadastrado(s).");
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(response);
       }
 
