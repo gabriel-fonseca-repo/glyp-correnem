@@ -1,5 +1,7 @@
 version: "3.8"
 
+# docker-compose up -d --build -f .\docker-compose.backend.yml
+
 name: correnem-backend
 
 services:
