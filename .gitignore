@@ -1,7 +1,8 @@
 .idea/
 target/
 bin/
+**/*.iml
+
 .env
 msconfig/
-**/*.iml
 gcloud-service-account-key.json
