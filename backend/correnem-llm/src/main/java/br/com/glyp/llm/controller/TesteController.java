@@ -14,8 +14,14 @@ import java.util.Map;
 public class TesteController {
 
   @GetMapping("/teste")
-  public ResponseEntity<Map<String, Object>> teste(@Value("${local.server.port}") String porta, @Value("${spring.application.name}") String nomeMs, @RequestHeader(GlypHeaders.CLAIMS_USUARIO) UsuarioResponsavelHeader claims) {
-    return ResponseEntity.ok(Map.of("message", String.format("Olá, %s, o microsserviço %s está rodando na porta %s!", claims.nome(), nomeMs, porta)));
+  public ResponseEntity<Map<String, Object>> teste(
+      @Value("${local.server.port}") String porta,
+      @Value("${spring.application.name}") String nomeMs,
+      @RequestHeader(GlypHeaders.CLAIMS_USUARIO) UsuarioResponsavelHeader claims
+  ) {
+    return ResponseEntity.ok(
+        Map.of("message", String.format("Olá, %s, o microsserviço %s está rodando na porta %s!", claims.nome(), nomeMs, porta))
+    );
   }
 
 }

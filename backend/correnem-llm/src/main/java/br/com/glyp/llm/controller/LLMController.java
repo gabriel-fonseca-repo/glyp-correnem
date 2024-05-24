@@ -8,10 +8,10 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/llm")
 public class LLMController {
 
-  private final RedacaoService llmService;
+  private final RedacaoService redacaoService;
 
-  public LLMController(RedacaoService llmService) {
-    this.llmService = llmService;
+  public LLMController(RedacaoService redacaoService) {
+    this.redacaoService = redacaoService;
   }
 
 }

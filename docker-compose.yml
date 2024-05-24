@@ -1,6 +1,8 @@
 version: "3.8"
 
-# docker-compose up -d --build
+# docker-compose --profile system up -d --build # Subir o sistema inteiro
+# docker-compose --profile backend up -d --build # Subir o backend
+# docker-compose --profile frontend up -d --build # Subir o frontend
 
 name: correnem
 
@@ -8,6 +10,9 @@ services:
   postgres:
     image: postgres:15
     container_name: postgres
+    profiles:
+      - backend
+      - system
     environment:
       POSTGRES_DB: ${POSTGRES_DB}
       POSTGRES_USER: ${POSTGRES_USER}
@@ -17,11 +22,27 @@ services:
     ports:
       - "5432:5432"
 
+  msorm:
+    build:
+      context: ./backend/correnem-msorm
+    image: glyp-msorm:latest
+    container_name: msorm
+    profiles:
+      - backend
+      - system
+    depends_on:
+      - postgres
+    volumes:
+      - ./backend/msconfig:/correnem
+
   eureka:
     build:
       context: ./backend/correnem-eureka
     image: glyp-eureka:latest
     container_name: eureka
+    profiles:
+      - backend
+      - system
     ports:
       - "8761:8761"
 
@@ -30,6 +51,9 @@ services:
       context: ./backend/correnem-gateway
     image: glyp-gateway:latest
     container_name: gateway
+    profiles:
+      - backend
+      - system
     depends_on:
       - eureka
       - msorm
@@ -38,21 +62,28 @@ services:
     volumes:
       - ./backend/msconfig:/correnem
 
-  msorm:
-    build:
-      context: ./backend/correnem-msorm
-    image: glyp-msorm:latest
-    container_name: msorm
-    depends_on:
-      - postgres
-    volumes:
-      - ./backend/msconfig:/correnem
-
   usuario:
     build:
       context: ./backend/correnem-usuario
     image: glyp-usuario:latest
     container_name: usuario
+    profiles:
+      - backend
+      - system
+    depends_on:
+      - eureka
+      - msorm
+    volumes:
+      - ./backend/msconfig:/correnem
+
+  llm:
+    build:
+      context: ./backend/correnem-llm
+    image: glyp-llm:latest
+    container_name: llm
+    profiles:
+      - backend
+      - system
     depends_on:
       - eureka
       - msorm
@@ -64,6 +95,9 @@ services:
       context: ./frontend
     image: glyp-correnem:latest
     container_name: frontend
+    profiles:
+      - frontend
+      - system
     ports:
       - "80:80"
 
