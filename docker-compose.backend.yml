@@ -1,6 +1,6 @@
 version: "3.8"
 
-name: correnem
+name: correnem-backend
 
 services:
   postgres:
@@ -56,14 +56,6 @@ services:
       - msorm
     volumes:
       - ./backend/msconfig:/correnem
-
-  frontend:
-    build:
-      context: ./frontend
-    image: glyp-correnem:latest
-    container_name: frontend
-    ports:
-      - "80:80"
 
 volumes:
   postgres_data:

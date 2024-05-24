@@ -23,7 +23,7 @@ public class JwtService {
 
   private final String issuer;
 
-  public JwtService(@Value("${hmit.jwt.secret}") String jwtSecret, @Value("${spring.application.name}") String issuer) {
+  public JwtService(@Value("${glyp.jwt.secret}") String jwtSecret, @Value("${spring.application.name}") String issuer) {
     this.jwtSecret = Keys.hmacShaKeyFor(jwtSecret.getBytes(StandardCharsets.UTF_8));
     this.issuer = issuer;
   }
@@ -35,9 +35,10 @@ public class JwtService {
   public String gerarTokenJwt(UsuarioJwtCreationQuery usuario) {
     Map<String, Object> claims = new HashMap<>();
     claims.put("idUsuario", usuario.getId());
-    claims.put("cpf", usuario.getCpf());
+    claims.put("nome", usuario.getNome());
+    claims.put("email", usuario.getEmail());
 
-    return Jwts.builder().setSubject(usuario.getCpf()).setClaims(claims).setIssuer(issuer).setIssuedAt(new Date())
+    return Jwts.builder().setSubject(usuario.getEmail()).setClaims(claims).setIssuer(issuer).setIssuedAt(new Date())
         .setExpiration(Date.from(LocalDateTime.now().plusMinutes(60L) // Tempo de expiração do JWT de 60 minutos.
             .atZone(ZoneId.systemDefault()).toInstant())).signWith(jwtSecret, SignatureAlgorithm.HS256).compact();
   }

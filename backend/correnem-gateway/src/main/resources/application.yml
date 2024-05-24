@@ -2,7 +2,7 @@ server:
   port: 8080
 
 rotas:
-  publicas: /correnem-usuario-ms/auth/criartoken,/correnem-usuario-ms/auth/invalidartoken
+  publicas: /correnem-usuario-ms/auth/criartoken,/correnem-usuario-ms/auth/invalidartoken,/correnem-usuario-ms/usuario/cadastro
   jwt:
     servico: "correnem-usuario-ms"
     uri: "/auth/validartoken"

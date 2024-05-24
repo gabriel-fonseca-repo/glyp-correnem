@@ -36,7 +36,7 @@ public class AuthController {
     this.json = json;
   }
 
-  @PostMapping("/login")
+  @PostMapping("/criartoken")
   public ResponseEntity<JwtCreationResponse> gerarToken(@RequestBody(required = false) JwtCreationRequest req) {
     var response = new JwtCreationResponse();
     response.setAction(ResponseAction.NONE);
@@ -46,7 +46,7 @@ public class AuthController {
       return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
     }
 
-    return usuarioService.consultarUsuarioPorCpf(req.cpf()).map(usuario -> {
+    return usuarioService.consultarUsuarioPorEmail(req.email()).map(usuario -> {
       if (!BCrypt.checkpw(req.senha(), usuario.getSenha())) {
         response.setMessage("Não foi encontrado usuário cadastrado com as credenciais fornecidas.");
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(response);
@@ -92,12 +92,9 @@ public class AuthController {
   @GetMapping("/invalidartoken")
   public ResponseEntity<Map<String, Object>> deslogar() {
     return ResponseEntity.status(HttpStatus.OK).header(HttpHeaders.SET_COOKIE, ResponseCookie.from(GlypCookies.JWT, "")
-            // .secure(true)
-            // .sameSite(Cookie.SameSite.LAX.attributeValue())
-            .httpOnly(true)
-            .maxAge(Duration.ofMinutes(60))
-            .path("/").build().toString())
-        .body(Map.of("message", "Logout realizado com sucesso.", "action", ResponseAction.LOGOUT));
+        // .secure(true)
+        // .sameSite(Cookie.SameSite.LAX.attributeValue())
+        .httpOnly(true).maxAge(Duration.ofMinutes(60)).path("/").build().toString()).body(Map.of("message", "Logout realizado com sucesso.", "action", ResponseAction.LOGOUT));
   }
 
 }

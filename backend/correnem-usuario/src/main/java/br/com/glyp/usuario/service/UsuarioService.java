@@ -1,11 +1,15 @@
 package br.com.glyp.usuario.service;
 
+import br.com.glyp.msorm.model.Usuario;
 import br.com.glyp.msorm.query.UsuarioJwtCreationQuery;
+import br.com.glyp.msorm.util.DadosValUtil;
 import br.com.glyp.msorm.web.dto.jwt.JwtCreationRequest;
 import br.com.glyp.msorm.web.dto.usuario.CadastrarUsuarioRequest;
 import br.com.glyp.usuario.dao.UsuarioDao;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -17,23 +21,37 @@ public class UsuarioService {
     this.usuarioDao = usuarioDao;
   }
 
+  public void save(Usuario usuario) {
+    usuarioDao.saveAndFlush(usuario);
+  }
+
   public boolean isLoginFormInvalido(JwtCreationRequest req) {
-    return ((req == null) || (req.cpf() == null || req.cpf().isBlank()) || (req.senha() == null || req.senha().isBlank()));
+    return ((req == null) || (req.email() == null || req.email().isBlank()) || (req.senha() == null || req.senha().isBlank()));
   }
 
-  public boolean isCadastroFormComCamposNaoPreenchidos(CadastrarUsuarioRequest req) {
-    return ((req == null) ||
-        (req.cpf() == null || req.cpf().isBlank()) ||
-        (req.senha() == null || req.senha().isBlank())) ||
-        (req.email() == null || req.email().isBlank()) ||
-        (req.nome() == null || req.nome().isBlank());
+  public Optional<UsuarioJwtCreationQuery> consultarUsuarioPorEmail(String email) {
+    return usuarioDao.findByEmail(email, UsuarioJwtCreationQuery.class);
   }
 
-  public Optional<UsuarioJwtCreationQuery> consultarUsuarioPorCpf(String cpf) {
-    return usuarioDao.findByCpf(cpf, UsuarioJwtCreationQuery.class);
+  public boolean isCpfOrEmailCadastrados(CadastrarUsuarioRequest req) {
+    return usuarioDao.isEmailJaCadastrado(req.email());
   }
 
-  public boolean isCadastroFormComCamposInvalidos(CadastrarUsuarioRequest req) {
+  public void isCadastroFormComCamposInvalidos(CadastrarUsuarioRequest req) {
+
+    List<String> camposInvalidos = new ArrayList<>();
+
+    if ((req.email() == null || req.email().isBlank()) || !DadosValUtil.isEmailValido(req.email()))
+      camposInvalidos.add("Email");
+    if ((req.nome() == null || req.nome().isBlank())) camposInvalidos.add("Nome");
+    if ((req.senha() == null || req.senha().isBlank())) camposInvalidos.add("Senha");
+
+    if (!camposInvalidos.isEmpty()) {
+      if (camposInvalidos.size() == 1)
+        throw new RuntimeException("O campo " + String.join(", ", camposInvalidos) + " está em branco ou é inválido.");
+      else
+        throw new RuntimeException("Os campos " + String.join(", ", camposInvalidos) + " estão em branco ou são inválidos.");
+    }
 
   }
 
