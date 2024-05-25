@@ -2,10 +2,14 @@ package br.com.glyp.usuario.service;
 
 import br.com.glyp.msorm.model.Usuario;
 import br.com.glyp.msorm.query.UsuarioJwtCreationQuery;
+import br.com.glyp.msorm.query.UsuarioPerfilQuery;
 import br.com.glyp.msorm.util.DadosValUtil;
+import br.com.glyp.msorm.web.UsuarioResponsavelHeader;
 import br.com.glyp.msorm.web.dto.jwt.JwtCreationRequest;
 import br.com.glyp.msorm.web.dto.usuario.CadastrarUsuarioRequest;
+import br.com.glyp.msorm.web.exceptions.GlypBackendException;
 import br.com.glyp.usuario.dao.UsuarioDao;
+import org.apache.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -55,4 +59,21 @@ public class UsuarioService {
 
   }
 
+  public UsuarioPerfilQuery getDadosPerfil(UsuarioResponsavelHeader claims) {
+    Optional<UsuarioPerfilQuery> dadosUsuario = usuarioDao.findById(claims.idUsuario(), UsuarioPerfilQuery.class);
+    if (dadosUsuario.isPresent()) {
+      return dadosUsuario.get();
+    } else {
+      throw new GlypBackendException("Usuário de id '" + claims.idUsuario() + "' não encontrado.", HttpStatus.SC_NOT_FOUND);
+    }
+  }
+
+  public Usuario getUsuario(UsuarioResponsavelHeader claims) {
+    Optional<Usuario> dadosUsuario = usuarioDao.findById(claims.idUsuario());
+    if (dadosUsuario.isPresent()) {
+      return dadosUsuario.get();
+    } else {
+      throw new GlypBackendException("Usuário de id '" + claims.idUsuario() + "' não encontrado.", HttpStatus.SC_NOT_FOUND);
+    }
+  }
 }

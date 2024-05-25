@@ -3,6 +3,8 @@ package br.com.glyp.llm.service;
 import br.com.glyp.llm.dao.RedacaoDao;
 import br.com.glyp.llm.dao.UsuarioDao;
 import br.com.glyp.msorm.model.Redacao;
+import br.com.glyp.msorm.model.Usuario;
+import br.com.glyp.msorm.web.UsuarioResponsavelHeader;
 import br.com.glyp.msorm.web.dto.redacao.CorrecaoRedacaoRequest;
 import br.com.glyp.msorm.web.exceptions.GlypBackendException;
 import org.apache.http.HttpStatus;
@@ -10,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -28,12 +31,20 @@ public class RedacaoService {
     this.geminiService = geminiService;
   }
 
-  public Redacao corrigirRedacao(String tema, String titulo, String texto) {
+  public Redacao corrigirRedacao(String tema, String titulo, String texto, UsuarioResponsavelHeader claims) {
     Redacao redacao = new Redacao();
-    redacao.setPrompt(tema);
-    redacao.setTitle(titulo);
-    redacao.setText(texto);
-    return this.corrigirRedacao(redacao);
+
+    Optional<Usuario> usuario = usuarioDao.findById(claims.idUsuario());
+    if (usuario.isPresent()) {
+      redacao.setPrompt(tema);
+      redacao.setTitle(titulo);
+      redacao.setText(texto);
+      redacao.setUsuario(usuario.get());
+      return this.corrigirRedacao(redacao);
+    } else {
+      throw new GlypBackendException("Usuário de id '" + claims.idUsuario() + "' não encontrado.", HttpStatus.SC_NOT_FOUND);
+    }
+
   }
 
   public Redacao corrigirRedacao(Redacao redacao) {

@@ -33,7 +33,8 @@ public class LLMController {
       Redacao correcao = redacaoService.corrigirRedacao(
           correcaoRedacaoRequest.tema(),
           correcaoRedacaoRequest.titulo(),
-          correcaoRedacaoRequest.texto()
+          correcaoRedacaoRequest.texto(),
+          claims
       );
 
       return ResponseEntity.ok(

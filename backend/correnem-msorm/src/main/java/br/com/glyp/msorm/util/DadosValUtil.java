@@ -12,13 +12,26 @@ public class DadosValUtil {
     return emailValidator.isValid(email);
   }
 
-  public static String apenasDigitos(String cpf) {
+  public static String cpfApenasDigitos(String cpf) {
     return cpf.replaceAll("-", "").replaceAll("\\.", "");
+  }
+
+  public static boolean isNotNumeric(String string) {
+    if (string == null || string.isEmpty()) {
+      return true;
+    }
+
+    try {
+      Integer.parseInt(string);
+      return false;
+    } catch (NumberFormatException ignored) {
+    }
+    return true;
   }
 
   public static boolean isCpfValido(String cpf) {
 
-    cpf = apenasDigitos(cpf);
+    cpf = cpfApenasDigitos(cpf);
 
     // considera-se erro CPF"s formados por uma sequencia de numeros iguais
     if (cpf.equals("00000000000") ||

@@ -21,4 +21,6 @@ public interface UsuarioDao extends JpaRepository<Usuario, Long> {
       """)
   boolean isEmailJaCadastrado(String email);
 
+  <T> Optional<T> findById(Long id, Class<T> type);
+
 }
