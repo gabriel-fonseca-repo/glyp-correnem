@@ -152,4 +152,8 @@ public class Redacao extends BaseModel {
   public void setComments(String comments) {
     this.comments = comments;
   }
+
+  public void computeAndSetFinalScore() {
+    this.finalScore = this.criteriaScore1 + this.criteriaScore2 + this.criteriaScore3 + this.criteriaScore4 + this.criteriaScore5;
+  }
 }

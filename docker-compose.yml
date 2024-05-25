@@ -78,6 +78,20 @@ services:
     volumes:
       - ./backend/msconfig:/correnem
 
+  redacao:
+    build:
+      context: ./backend/correnem-redacao
+    image: glyp-redacao:latest
+    container_name: redacao
+    profiles:
+      - backend
+      - system
+    depends_on:
+      - eureka
+      - msorm
+    volumes:
+      - ./backend/msconfig:/correnem
+
   llm:
     build:
       context: ./backend/correnem-llm
