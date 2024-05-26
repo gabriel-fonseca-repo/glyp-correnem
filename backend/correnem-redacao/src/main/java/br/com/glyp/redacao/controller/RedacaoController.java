@@ -37,7 +37,7 @@ public class RedacaoController {
       Pageable pageable = PageRequest.of(
           Integer.parseInt(page),
           Integer.parseInt(size),
-          Sort.by(Sort.Direction.DESC, "dataInclusao")
+          Sort.by(Sort.Direction.DESC, "auditoria.dataInclusao")
       );
 
       return ResponseEntity.ok(

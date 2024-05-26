@@ -4,8 +4,8 @@ import com.fasterxml.jackson.annotation.JsonIgnoreType;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.MappedSuperclass;
 
-@MappedSuperclass
 @JsonIgnoreType
+@MappedSuperclass
 public class BaseModel {
 
   @Embedded
@@ -19,3 +19,4 @@ public class BaseModel {
     this.auditoria = auditoria;
   }
 }
+
