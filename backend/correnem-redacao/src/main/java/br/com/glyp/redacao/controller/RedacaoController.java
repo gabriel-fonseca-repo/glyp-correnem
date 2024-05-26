@@ -52,4 +52,26 @@ public class RedacaoController {
     }
   }
 
+  @GetMapping("/{idRedacao}")
+  public ResponseEntity<Map<String, Object>> paginarRedacoes(
+      @RequestHeader(GlypHeaders.CLAIMS_USUARIO) UsuarioResponsavelHeader claims,
+      @PathVariable String idRedacao) {
+    try {
+
+      if (DadosValUtil.isNotNumeric(idRedacao)) {
+        throw new GlypBackendException("O valor '" + idRedacao + "' não é um valor de ID válido.", HttpStatus.BAD_REQUEST.value());
+      }
+
+      return ResponseEntity.ok(
+          Map.of(
+              "redacao", redacaoService.findById(claims, Long.parseLong(idRedacao))
+          )
+      );
+    } catch (GlypBackendException ge) {
+      return ResponseEntity.status(ge.getStatus()).body(Map.of("message", ge.getMessage()));
+    } catch (Exception e) {
+      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of("message", e.getMessage()));
+    }
+  }
+
 }
