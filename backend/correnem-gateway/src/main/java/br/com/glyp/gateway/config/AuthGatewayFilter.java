@@ -37,7 +37,9 @@ public class AuthGatewayFilter extends AbstractGatewayFilterFactory<AuthGatewayF
   private final WebClient.Builder wcBuilder;
   private final String jwtValidationUri;
 
-  public AuthGatewayFilter(@Value("${rotas.publicas}") List<String> rotas, @Value("${rotas.jwt.verification}") String jwtValidationUri, ObjectMapper json, WebClient.Builder wcBuilder) {
+  public AuthGatewayFilter(@Value("${rotas.publicas}") List<String> rotas,
+                           @Value("${rotas.jwt.verification}") String jwtValidationUri, ObjectMapper json,
+                           WebClient.Builder wcBuilder) {
     super(Config.class);
     this.rotaPatterns = rotas.stream().map(Pattern::compile).toList();
     this.jwtValidationUri = jwtValidationUri;
@@ -67,28 +69,46 @@ public class AuthGatewayFilter extends AbstractGatewayFilterFactory<AuthGatewayF
   }
 
   public Mono<Void> authFilter(ServerWebExchange exchange, GatewayFilterChain chain) throws AuthGatewayFilterException {
-    return requestValidacaoMsUsuario(pegarJwtDaRequisicao(exchange.getRequest().getCookies())).flatMap(response -> modificarRepassarRequisicao(response, exchange, chain)).onErrorResume(AuthGatewayFilterException.class, error -> escreverRespostaDeErro(exchange, error));
+    return requestValidacaoMsUsuario(pegarJwtDaRequisicao(exchange.getRequest().getCookies()))
+      .flatMap(response -> modificarRepassarRequisicao(response, exchange, chain))
+      .onErrorResume(AuthGatewayFilterException.class, error -> escreverRespostaDeErro(exchange, error));
   }
 
   private String pegarJwtDaRequisicao(MultiValueMap<String, HttpCookie> cookies) throws AuthGatewayFilterException {
     if (!cookies.containsKey(GlypCookies.JWT)) {
-      throw new AuthGatewayFilterException("Credenciais de autenticação ausêntes. Faça login novamente.", ResponseAction.LOGOUT, HttpStatus.UNAUTHORIZED);
+      throw new AuthGatewayFilterException("Credenciais de autenticação ausêntes. Faça login novamente.",
+        ResponseAction.LOGOUT, HttpStatus.UNAUTHORIZED);
     }
     return cookies.getFirst(GlypCookies.JWT).getValue();
   }
 
   public Mono<ResponseEntity<JwtValidationResponse>> requestValidacaoMsUsuario(String jwt) {
-    return wcBuilder.build().post().uri(jwtValidationUri).contentType(MediaType.APPLICATION_JSON).body(BodyInserters.fromValue(Map.of("token", jwt))).retrieve().toEntity(JwtValidationResponse.class).onErrorMap(WebClientResponseException.class, this::mapearErroAutenticacao);
+    return wcBuilder
+      .build().post().uri(jwtValidationUri)
+      .contentType(MediaType.APPLICATION_JSON)
+      .body(BodyInserters.fromValue(Map.of("token", jwt)))
+      .retrieve().toEntity(JwtValidationResponse.class)
+      .onErrorMap(WebClientResponseException.class, this::mapearErroAutenticacao);
   }
 
   private Throwable mapearErroAutenticacao(WebClientResponseException errorResponse) {
     new Thread(() -> log.error("Erro na validação de token.", errorResponse)).start();
     JwtValidationResponse respostaValidacaoErro = errorResponse.getResponseBodyAs(JwtValidationResponse.class);
-    return new AuthGatewayFilterException(HttpStatus.resolve(errorResponse.getStatusCode().value()), respostaValidacaoErro.getBaseResponse());
+    return new AuthGatewayFilterException(
+      HttpStatus.resolve(errorResponse.getStatusCode().value()),
+      respostaValidacaoErro.getBaseResponse()
+    );
   }
 
-  public Mono<Void> modificarRepassarRequisicao(ResponseEntity<JwtValidationResponse> response, ServerWebExchange exchange, GatewayFilterChain chain) {
-    exchange.getRequest().mutate().header(GlypHeaders.CLAIMS_USUARIO, response.getBody().getClaims()).header(HttpHeaders.COOKIE, null, null).header(HttpHeaders.SET_COOKIE, null, null);
+  public Mono<Void> modificarRepassarRequisicao(
+    ResponseEntity<JwtValidationResponse> response,
+    ServerWebExchange exchange,
+    GatewayFilterChain chain
+  ) {
+    exchange.getRequest().mutate()
+            .header(GlypHeaders.CLAIMS_USUARIO, response.getBody().getClaims())
+            .header(HttpHeaders.COOKIE, null, null)
+            .header(HttpHeaders.SET_COOKIE, null, null);
     return chain.filter(exchange);
   }
 
@@ -98,11 +118,11 @@ public class AuthGatewayFilter extends AbstractGatewayFilterFactory<AuthGatewayF
       bytes = json.writeValueAsBytes(Map.of("message", wfe.getMessage(), "action", wfe.getAction()));
     } catch (JsonProcessingException e) {
       bytes = """
-            {
-              "message": "Erro interno do servidor. Tente novamente.",
-              "action": "NONE"
-            }
-          """.getBytes();
+          {
+            "message": "Erro interno do servidor. Tente novamente.",
+            "action": "NONE"
+          }
+        """.getBytes();
       wfe.setStatus(HttpStatus.INTERNAL_SERVER_ERROR);
     }
     DataBuffer buffer = exchange.getResponse().bufferFactory().wrap(bytes);
