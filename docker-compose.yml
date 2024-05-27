@@ -115,11 +115,16 @@ services:
       context: ./frontend
     image: glyp-correnem:latest
     container_name: frontend
+    environment:
+      - NODE_ENV=production
     profiles:
       - frontend
       - system
     ports:
       - "80:80"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
 
 volumes:
   postgres_data:
