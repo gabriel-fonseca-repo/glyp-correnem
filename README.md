@@ -14,8 +14,8 @@
 
 <p align="center">
   <a href="#funcionalidades">Funcionalidades</a> •
-  <a href="#how-to-use">How To Use</a> •
-  <a href="#credits">Credits</a>
+  <a href="#como-usar">Como usar</a> •
+  <a href="#creditos">Creditos</a>
 </p>
 
 ![screenshot](https://raw.githubusercontent.com/LuccaBarroso/correnem/main/public/CorrenemDemo.gif)
@@ -52,7 +52,7 @@ Versões utilizadas de cada ferramenta:
 -   `$ npm --version -> 10.5.0`
 -   `$ docker --version -> Docker version 26.1.1, build 4cf5afa`
 
-## Credits
+## Creditos
 
 Esse software usa as seguintes tecnologias de código-aberto:
 
