@@ -22,13 +22,13 @@
 
 ## Funcionalidades
 
--   **Correção Automática de Redações:** Utilização de modelos de IA para avaliar redações do ENEM.
--   **Feedback Detalhado para Alunos:** Geração automática de comentários detalhados sobre as redações.
--   **Edição de Feedback por Professores:** Capacidade dos professores para editar e personalizar os feedbacks gerados pela IA.
--   **Interface Intuitiva de Usuário:** Frontend moderno e acessível para facilitar o uso por professores e alunos.
--   **Upload e Gestão de Redações:** Funcionalidades para o upload e gerenciamento de redações.
--   **Relatórios de Desempenho:** Geração de relatórios detalhados sobre o desempenho dos alunos.
--   **Autonomia para Professores:** Permite que professores ajustem as correções e notas geradas pela IA.
+-   **Correção automática de redações por modelos de IA contemporâneos.**
+-   **Feedback detalhado para alunos.**
+-   **Edição de feedback por professores em prol da sua autonomia.**
+-   **Interface intuitiva de usuário.**
+-   **Upload e gestão de redações.**
+-   **Relatórios de desempenho dos alunos.**
+-   **Autonomia para professores.**
 
 ## Como usar
 
