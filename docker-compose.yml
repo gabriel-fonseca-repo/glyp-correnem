@@ -122,7 +122,7 @@ services:
       - frontend
       - system
     ports:
-      - "80:80"
+      - "5000:5000"
 
 volumes:
   postgres_data:
