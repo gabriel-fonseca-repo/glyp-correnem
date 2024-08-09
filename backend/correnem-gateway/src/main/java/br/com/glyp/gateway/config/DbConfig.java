@@ -16,19 +16,19 @@ public class DbConfig extends AbstractR2dbcConfiguration {
 
   private static final Logger LOG = LogManager.getLogger(DbConfig.class);
 
-  @Value("${banco.host}")
+  @Value("${POSTGRES_HOST}")
   private String host;
 
-  @Value("${banco.porta}")
+  @Value("${POSTGRES_PORT}")
   private Integer porta;
 
-  @Value("${banco.database}")
+  @Value("${POSTGRES_DB}")
   private String banco;
 
-  @Value("${banco.usuario}")
+  @Value("${POSTGRES_USER}")
   private String usuario;
 
-  @Value("${banco.senha}")
+  @Value("${POSTGRES_PASSWORD}")
   private String senha;
 
   @Override

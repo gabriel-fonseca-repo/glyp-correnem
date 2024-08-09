@@ -48,6 +48,7 @@ public class GeminiService {
           .setCategory(HarmCategory.HARM_CATEGORY_HARASSMENT)
           .setThreshold(SafetySetting.HarmBlockThreshold.BLOCK_MEDIUM_AND_ABOVE).build()
   );
+
   // @formatter:on
 
   public GeminiService() {
@@ -59,27 +60,32 @@ public class GeminiService {
     String systemInstruction = "";
     try {
       try (InputStream inputStream = resource.getInputStream()) {
-        systemInstruction = new String(inputStream.readAllBytes(), StandardCharsets.UTF_8);
+        systemInstruction =
+          new String(inputStream.readAllBytes(), StandardCharsets.UTF_8);
       }
       if (systemInstruction.isBlank()) {
         throw new RuntimeException("Instrução de sistema está em branco.");
       }
     } catch (Exception e) {
-      throw new RuntimeException("Erro no carregamento do arquivo '\"gemini-si.txt\"' de instrução de sistema do modelo Gemini: " + e.getMessage());
+      throw new RuntimeException(
+        "Erro no carregamento do arquivo '\"gemini-si.txt\"' de instrução de sistema do modelo Gemini: " +
+          e.getMessage()
+      );
     }
     return systemInstruction;
   }
 
   public String corrigirRedacao(Redacao redacao) {
     return this.corrigirRedacao(
-        redacao.getPrompt(),
-        redacao.getTitle(),
-        redacao.getText()
+      redacao.getPrompt(),
+      redacao.getTitle(),
+      redacao.getText()
     );
   }
 
   public String corrigirRedacao(String tema, String titulo, String texto) {
-    String templateInput = """
+    String templateInput =
+      """
             TEMA: %s
             TITULO: %s
             TEXTO: %s
@@ -88,26 +94,30 @@ public class GeminiService {
     String input = String.format(templateInput, tema, titulo, texto).trim();
 
     try (VertexAI vertexAi = new VertexAI(gcloudProjectId, gcloudLocationId);) {
-      Content vertexAiSystemInstruction = ContentMaker.fromMultiModalData(systemInstruction);
+      Content vertexAiSystemInstruction = ContentMaker.fromMultiModalData(
+        systemInstruction
+      );
       GenerativeModel model = new GenerativeModel.Builder()
-          .setModelName(gcloudModelId)
-          .setVertexAi(vertexAi)
-          .setGenerationConfig(generationConfig)
-          .setSafetySettings(safetySettings)
-          .setSystemInstruction(vertexAiSystemInstruction)
-          .build();
-      return model.generateContent(input)
-          .getCandidates(0)
-          .getContent()
-          .getPartsList()
-          .stream()
-          .map(Part::getText)
-          .collect(Collectors.joining());
+        .setModelName(gcloudModelId)
+        .setVertexAi(vertexAi)
+        .setGenerationConfig(generationConfig)
+        .setSafetySettings(safetySettings)
+        .setSystemInstruction(vertexAiSystemInstruction)
+        .build();
+      return model
+        .generateContent(input)
+        .getCandidates(0)
+        .getContent()
+        .getPartsList()
+        .stream()
+        .map(Part::getText)
+        .collect(Collectors.joining());
     } catch (Exception e) {
       e.printStackTrace();
-      throw new RuntimeException("Erro na comunicação com o modelo na correção da redação: " + e.getMessage());
+      throw new RuntimeException(
+        "Erro na comunicação com o modelo na correção da redação: " +
+          e.getMessage()
+      );
     }
-
   }
-
 }

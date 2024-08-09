@@ -6,6 +6,4 @@ spring:
     name: "correnem-llm-ms"
   config:
     import:
-      - "file:/correnem/db.yml"
-      - "file:/correnem/jwt.yml"
       - "file:/correnem/eureka-client.yml"

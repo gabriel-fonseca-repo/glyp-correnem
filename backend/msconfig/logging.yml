@@ -1,0 +1,8 @@
+logging:
+    level:
+        root: DEBUG
+    file:
+        name: /correnem/logs/${spring.application.name}.log
+    logback:
+        rollingpolicy:
+            max-history: 30

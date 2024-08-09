@@ -1,0 +1,29 @@
+spring:
+  jpa:
+    hibernate:
+      ddl_auto: update
+    show_sql: false
+    generate_ddl: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        connection:
+          driver_class: org.postgresql.Driver
+        hbm2ddl:
+          auto: update
+          # schema_generation_script: backend/db/update_ddl.sql
+          # schema_generation:
+          #   script:
+          #     append: true
+        format_sql: true
+        show_sql: false
+      jakarta:
+        persistence:
+          create-database-schemas: true
+          # schema-generation:
+          #   scripts:
+          #     action: update
+          #     create-target: backend/db/update-ddl.sql
+          #     create-source: metadata
+          #     drop-target: backend/db/drop-ddl.sql
+          #     drop-source: metadata

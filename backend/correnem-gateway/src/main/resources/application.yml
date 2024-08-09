@@ -13,7 +13,6 @@ spring:
     name: "correnem-gateway-ms"
   config:
     import:
-      - "file:/correnem/db.yml"
       - "file:/correnem/eureka-client.yml"
   main:
     allow-bean-definition-overriding: true
@@ -28,6 +27,8 @@ spring:
             allowedOrigins:
               - "http://localhost:5173"
               - "http://localhost:80"
+              - "http://localhost:5000"
+              - "https://app.correnem.com"
               - "http://localhost"
       loadbalancer:
         use404: true

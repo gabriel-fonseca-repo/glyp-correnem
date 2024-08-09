@@ -15,10 +15,8 @@ services:
       - backend
       - system
       - database
-    environment:
-      POSTGRES_DB: ${POSTGRES_DB}
-      POSTGRES_USER: ${POSTGRES_USER}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    env_file:
+      - ./.env
     volumes:
       - postgres_data:/var/lib/postgresql/data
     ports:
@@ -32,6 +30,8 @@ services:
     profiles:
       - backend
       - system
+    env_file:
+      - ./.env
     depends_on:
       - postgres
     volumes:
@@ -45,6 +45,8 @@ services:
     profiles:
       - backend
       - system
+    env_file:
+      - ./.env
     ports:
       - "8761:8761"
 
@@ -56,6 +58,8 @@ services:
     profiles:
       - backend
       - system
+    env_file:
+      - ./.env
     depends_on:
       - eureka
       - msorm
@@ -72,6 +76,8 @@ services:
     profiles:
       - backend
       - system
+    env_file:
+      - ./.env
     depends_on:
       - eureka
       - msorm
@@ -86,6 +92,8 @@ services:
     profiles:
       - backend
       - system
+    env_file:
+      - ./.env
     depends_on:
       - eureka
       - msorm
@@ -100,14 +108,16 @@ services:
     profiles:
       - backend
       - system
+    env_file:
+      - ./.env
     depends_on:
       - eureka
       - msorm
-    environment:
-      PROJECT_ID: ${PROJECT_ID}
-      LOCATION_ID: ${LOCATION_ID}
-      MODEL_ID: ${MODEL_ID}
     volumes:
+      - type: bind
+        source: ./backend/correnem-llm/gcloud-service-account-key.json
+        target: /correnem/gcloud-service-account-key.json
+        read_only: true
       - ./backend/msconfig:/correnem
 
   frontend:
@@ -115,12 +125,11 @@ services:
       context: ./frontend
     image: glyp-correnem:latest
     container_name: frontend
-    environment:
-      NODE_ENV: production
-      VITE_APP_API_URL: https://api.correnem.com
     profiles:
       - frontend
       - system
+    env_file:
+      - ./.env
     ports:
       - "5000:5000"
 

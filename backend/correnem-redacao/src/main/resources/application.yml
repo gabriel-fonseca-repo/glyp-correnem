@@ -6,6 +6,4 @@ spring:
     name: "correnem-redacao-ms"
   config:
     import:
-      - "file:/correnem/db.yml"
-      - "file:/correnem/jwt.yml"
       - "file:/correnem/eureka-client.yml"

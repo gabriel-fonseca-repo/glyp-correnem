@@ -23,7 +23,7 @@ public class JwtService {
 
   private final String issuer;
 
-  public JwtService(@Value("${glyp.jwt.secret}") String jwtSecret, @Value("${spring.application.name}") String issuer) {
+  public JwtService(@Value("${JWT_SECRET}") String jwtSecret, @Value("${spring.application.name}") String issuer) {
     this.jwtSecret = Keys.hmacShaKeyFor(jwtSecret.getBytes(StandardCharsets.UTF_8));
     this.issuer = issuer;
   }
@@ -39,7 +39,8 @@ public class JwtService {
     claims.put("email", usuario.getEmail());
 
     return Jwts.builder().setSubject(usuario.getEmail()).setClaims(claims).setIssuer(issuer).setIssuedAt(new Date())
-        .setExpiration(Date.from(LocalDateTime.now().plusMinutes(60L) // Tempo de expiração do JWT de 60 minutos.
-            .atZone(ZoneId.systemDefault()).toInstant())).signWith(jwtSecret, SignatureAlgorithm.HS256).compact();
+               .setExpiration(Date.from(LocalDateTime.now().plusMinutes(60L) // Tempo de expiração do JWT de 60 minutos.
+                                                     .atZone(ZoneId.systemDefault()).toInstant())).signWith(jwtSecret
+        , SignatureAlgorithm.HS256).compact();
   }
 }
