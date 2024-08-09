@@ -8,7 +8,6 @@ COPY src ./src
 
 # Copy the local Maven repository from correnem-msorm
 COPY --from=glyp-msorm:latest /root/.m2 /root/.m2
-COPY /data/coolify/applications/d0s80o8sggskwc4kwcc4sw0g/backend/correnem-llm/gcloud-service-account-key.json /gcloud/gcloud-service-account-key.json
 
 # Build the application
 RUN mvn clean package -DskipTests
@@ -17,9 +16,11 @@ RUN mvn clean package -DskipTests
 FROM openjdk:21-jdk-slim
 WORKDIR /app
 
+# Debug purposes
+RUN ls -lah /gcloud
+
 # Copy the built jar from the builder stage
 COPY --from=builder /app/target/*.jar app.jar
-COPY --from=builder /gcloud/gcloud-service-account-key.json /gcloud/gcloud-service-account-key.json
 
 # Instalar dependências necessárias
 RUN apt-get update && apt-get install -y \
