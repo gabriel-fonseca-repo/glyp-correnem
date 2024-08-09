@@ -31,22 +31,24 @@ public class UsuarioController {
     response.setAction(ResponseAction.NONE);
     try {
 
-      usuarioService.isCadastroFormComCamposInvalidos(req);
+      throw new GlypBackendException("O cadastro de usuários está desabilitado.", HttpStatus.FORBIDDEN.value());
 
-      if (usuarioService.isEmailJaCadastrado(req)) {
-        response.setMessage("E-mail já cadastrado(s).");
-        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(response);
-      }
-
-      Usuario novoUsuario = new Usuario();
-      novoUsuario.setEmail(req.email());
-      novoUsuario.setNome(req.nome());
-      novoUsuario.setSenha(BCrypt.hashpw(req.senha(), BCrypt.gensalt()));
-
-      usuarioService.save(novoUsuario);
-      response.setMessage("Usuário cadastrado com sucesso.");
-
-      return ResponseEntity.status(HttpStatus.OK).body(response);
+//      usuarioService.isCadastroFormComCamposInvalidos(req);
+//
+//      if (usuarioService.isEmailJaCadastrado(req)) {
+//        response.setMessage("E-mail já cadastrado(s).");
+//        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(response);
+//      }
+//
+//      Usuario novoUsuario = new Usuario();
+//      novoUsuario.setEmail(req.email());
+//      novoUsuario.setNome(req.nome());
+//      novoUsuario.setSenha(BCrypt.hashpw(req.senha(), BCrypt.gensalt()));
+//
+//      usuarioService.save(novoUsuario);
+//      response.setMessage("Usuário cadastrado com sucesso.");
+//
+//      return ResponseEntity.status(HttpStatus.OK).body(response);
     } catch (Exception e) {
       response.setMessage(e.getMessage());
       return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
@@ -56,13 +58,13 @@ public class UsuarioController {
 
   @GetMapping("/dados-perfil")
   public ResponseEntity<Map<String, Object>> consultarPerfil(
-      @RequestHeader(GlypHeaders.CLAIMS_USUARIO) UsuarioResponsavelHeader claims
+    @RequestHeader(GlypHeaders.CLAIMS_USUARIO) UsuarioResponsavelHeader claims
   ) {
     try {
       return ResponseEntity.ok(
-          Map.of(
-              "perfil", usuarioService.getDadosPerfil(claims)
-          )
+        Map.of(
+          "perfil", usuarioService.getDadosPerfil(claims)
+        )
       );
     } catch (GlypBackendException ge) {
       return ResponseEntity.status(ge.getStatus()).body(Map.of("message", ge.getMessage()));
@@ -74,8 +76,8 @@ public class UsuarioController {
 
   @PostMapping("/editar-perfil")
   public ResponseEntity<Map<String, Object>> editarPerfil(
-      @RequestHeader(GlypHeaders.CLAIMS_USUARIO) UsuarioResponsavelHeader claims,
-      @RequestBody Map<String, String> req
+    @RequestHeader(GlypHeaders.CLAIMS_USUARIO) UsuarioResponsavelHeader claims,
+    @RequestBody Map<String, String> req
   ) {
     try {
       Usuario usuario = usuarioService.getUsuario(claims);
@@ -86,7 +88,8 @@ public class UsuarioController {
       });
       req.computeIfPresent("senhanova", (k, v) -> {
         if (!req.containsKey("senhaantiga")) {
-          throw new GlypBackendException("Para alterar sua senha, você deve informar sua senha atual.", HttpStatus.BAD_REQUEST.value());
+          throw new GlypBackendException("Para alterar sua senha, você deve informar sua senha atual.",
+            HttpStatus.BAD_REQUEST.value());
         }
         if (!BCrypt.checkpw(req.get("senhaantiga"), usuario.getSenha())) {
           throw new GlypBackendException("A senha informada está incorreta.", HttpStatus.BAD_REQUEST.value());
@@ -98,9 +101,9 @@ public class UsuarioController {
       usuarioService.save(usuario);
 
       return ResponseEntity.ok(
-          Map.of(
-              "message", "Dados do perfil alterados com sucesso!"
-          )
+        Map.of(
+          "message", "Dados do perfil alterados com sucesso!"
+        )
       );
     } catch (GlypBackendException ge) {
       return ResponseEntity.status(ge.getStatus()).body(Map.of("message", ge.getMessage()));
