@@ -113,6 +113,7 @@ services:
     depends_on:
       - eureka
       - msorm
+    command: bash -c "ls -lah"
     volumes:
       - "./backend/correnem-llm/gcloud-service-account-key.json:/gcloud/gcloud-service-account-key.json"
       - "./backend/msconfig:/correnem"
