@@ -16,6 +16,9 @@ RUN mvn clean package -DskipTests
 FROM openjdk:21-jdk-slim
 WORKDIR /app
 
+# Debug purposes
+RUN ls -lah
+
 # Copy the built jar from the builder stage
 COPY --from=builder /app/target/*.jar app.jar
 COPY --from=builder /gcloud/gcloud-service-account-key.json /gcloud/gcloud-service-account-key.json
