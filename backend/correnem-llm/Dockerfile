@@ -9,6 +9,9 @@ COPY src ./src
 # Copy the local Maven repository from correnem-msorm
 COPY --from=glyp-msorm:latest /root/.m2 /root/.m2
 
+# Debug purposes
+RUN ls -lah /gcloud
+
 # Build the application
 RUN mvn clean package -DskipTests
 
