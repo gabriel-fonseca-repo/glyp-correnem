@@ -6,8 +6,6 @@ WORKDIR /app
 COPY pom.xml .
 COPY src ./src
 
-COPY gcloud-service-account-key.json ./gcloud/gcloud-service-account-key.json
-
 # Copy the local Maven repository from correnem-msorm
 COPY --from=glyp-msorm:latest /root/.m2 /root/.m2
 
@@ -20,9 +18,6 @@ WORKDIR /app
 
 # Copy the built jar from the builder stage
 COPY --from=builder /app/target/*.jar app.jar
-
-# Copy the built jar from the builder stage
-COPY --from=builder /app/gcloud/gcloud-service-account-key.json /gcloud/gcloud-service-account-key.json
 
 # Install dependencies
 RUN apt-get update && apt-get install -y \
@@ -39,8 +34,6 @@ RUN echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] https://packages.
   apt-get update -y && apt-get install google-cloud-sdk -y
 
 ENV GOOGLE_APPLICATION_CREDENTIALS=/gcloud/gcloud-service-account-key.json
-RUN gcloud auth activate-service-account --key-file=/gcloud/gcloud-service-account-key.json
-RUN gcloud init
 
 # Clean APT Cache
 RUN apt-get clean && rm -rf /var/lib/apt/lists/*
