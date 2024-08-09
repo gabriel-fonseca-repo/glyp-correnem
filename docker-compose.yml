@@ -116,7 +116,7 @@ services:
     volumes:
       - type: bind
         source: ./backend/correnem-llm/gcloud-service-account-key.json
-        target: /correnem/gcloud-service-account-key.json
+        target: /gcloud/gcloud-service-account-key.json
         read_only: true
       - ./backend/msconfig:/correnem
 
