@@ -10,11 +10,6 @@ COPY src ./src
 # Copy the local Maven repository from correnem-msorm
 COPY --from=glyp-msorm:latest /root/.m2 /root/.m2
 
-# Copy Google Cloud Service Account Key
-RUN ls -lah /
-COPY /gcloud-service-account-key.json /gcloud/gcloud-service-account-key.json
-RUN ls -lah /
-
 # Build the application
 RUN mvn clean package -DskipTests
 
@@ -26,9 +21,7 @@ WORKDIR /app
 COPY --from=builder /app/target/*.jar app.jar
 
 # Copy Google Cloud Service Account Key
-RUN ls -lah /
-COPY --from=builder /gcloud-service-account-key.json /gcloud/gcloud-service-account-key.json
-RUN ls -lah /
+COPY gcloud-service-account-key.json /gcloud/gcloud-service-account-key.json
 
 # Install dependencies
 RUN apt-get update && apt-get install -y \
