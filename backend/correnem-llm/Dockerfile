@@ -19,14 +19,14 @@ WORKDIR /app
 # Copy the built jar from the builder stage
 COPY --from=builder /app/target/*.jar app.jar
 
-# Instalar dependências necessárias
+# Install dependencies
 RUN apt-get update && apt-get install -y \
   apt-transport-https \
   ca-certificates \
   gnupg \
   curl
 
-# Adicionar a chave do Google Cloud SDK
+# Add Google Cloud SDK Key
 RUN echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] https://packages.cloud.google.com/apt cloud-sdk main" | \
   tee -a /etc/apt/sources.list.d/google-cloud-sdk.list && \
   curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | \
@@ -37,7 +37,7 @@ ENV GOOGLE_APPLICATION_CREDENTIALS=/gcloud/gcloud-service-account-key.json
 RUN gcloud auth activate-service-account --key-file=/gcloud/gcloud-service-account-key.json
 RUN gcloud init
 
-# Limpar o cache do apt
+# Clean APT Cache
 RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Run the application
