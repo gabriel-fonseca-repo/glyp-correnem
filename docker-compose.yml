@@ -114,11 +114,11 @@ services:
       - eureka
       - msorm
     volumes:
-      - "./backend/correnem-llm:/gcloud"
       - ./backend/msconfig:/correnem
       - type: bind
         source: ./backend/correnem-llm/gcloud-service-account-key.json
         target: /gcloud/gcloud-service-account-key.json
+        read_only: true
 
   frontend:
     build:
