@@ -2,6 +2,8 @@
 FROM maven:3.9.6-eclipse-temurin-21 as builder
 WORKDIR /app
 
+RUN ls -lah /
+
 # Copy the pom.xml and source code
 COPY pom.xml .
 COPY src ./src
