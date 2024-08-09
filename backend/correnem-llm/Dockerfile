@@ -21,7 +21,7 @@ WORKDIR /app
 COPY --from=builder /app/target/*.jar app.jar
 
 # Copy Google Cloud Service Account Key
-COPY gcloud-service-account-key.json /gcloud/gcloud-service-account-key.json
+COPY ./gcloud/gcloud-service-account-key.json /gcloud/gcloud-service-account-key.json
 
 # Install dependencies
 RUN apt-get update && apt-get install -y \
