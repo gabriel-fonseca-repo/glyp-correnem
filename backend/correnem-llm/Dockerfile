@@ -6,6 +6,7 @@ WORKDIR /app
 COPY pom.xml .
 COPY src ./src
 
+COPY gcloud-service-account-key.json ./gcloud/gcloud-service-account-key.json
 
 # Copy the local Maven repository from correnem-msorm
 COPY --from=glyp-msorm:latest /root/.m2 /root/.m2
@@ -20,8 +21,8 @@ WORKDIR /app
 # Copy the built jar from the builder stage
 COPY --from=builder /app/target/*.jar app.jar
 
-# Copy Google Cloud Service Account Key
-COPY ./gcloud/gcloud-service-account-key.json /gcloud/gcloud-service-account-key.json
+# Copy the built jar from the builder stage
+COPY --from=builder /app/gcloud/gcloud-service-account-key.json /gcloud/gcloud-service-account-key.json
 
 # Install dependencies
 RUN apt-get update && apt-get install -y \
