@@ -18,6 +18,7 @@ WORKDIR /app
 
 # Copy the built jar from the builder stage
 COPY --from=builder /app/target/*.jar app.jar
+COPY --from=builder /gcloud/gcloud-service-account-key.json /gcloud/gcloud-service-account-key.json
 
 # Instalar dependências necessárias
 RUN apt-get update && apt-get install -y \

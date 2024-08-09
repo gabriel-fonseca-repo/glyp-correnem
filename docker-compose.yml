@@ -1,9 +1,9 @@
 version: "3.8"
 
-# docker-compose --profile system up -d --build # Subir o sistema inteiro
-# docker-compose --profile backend up -d --build # Subir o backend
-# docker-compose --profile frontend up -d --build # Subir o frontend
-# docker-compose --profile database up -d --build # Subir o banco de dados
+# docker compose --profile system up -d --build # Subir o sistema inteiro
+# docker compose --profile backend up -d --build # Subir o backend
+# docker compose --profile frontend up -d --build # Subir o frontend
+# docker compose --profile database up -d --build # Subir o banco de dados
 
 name: correnem
 
@@ -114,11 +114,8 @@ services:
       - eureka
       - msorm
     volumes:
-      - type: bind
-        source: ./backend/correnem-llm/gcloud-service-account-key.json
-        target: /gcloud/gcloud-service-account-key.json
-        read_only: true
-      - ./backend/msconfig:/correnem
+      - "./backend/correnem-llm/gcloud-service-account-key.json:/gcloud/gcloud-service-account-key.json"
+      - "./backend/msconfig:/correnem"
 
   frontend:
     build:
