@@ -110,6 +110,11 @@ services:
       - system
     env_file:
       - ./.env
+    command: >
+      bash -c "
+          gcloud auth activate-service-account --key-file=/gcloud/gcloud-service-account-key.json &&
+          gcloud config set project ${PROJECT_ID}
+      "
     depends_on:
       - eureka
       - msorm
