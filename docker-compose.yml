@@ -5,6 +5,13 @@ version: "3.8"
 # docker compose --profile frontend up -d --build # Subir o frontend
 # docker compose --profile database up -d --build # Subir o banco de dados
 
+# Buildar um serviço específico antes de subir. Util pra atualizar um microserviço sem precisar buildar o sistema inteiro.
+# docker compose up --build --force-recreate --no-deps -d <service_name>
+# docker compose up --build --force-recreate --no-deps -d usuario
+# docker compose up --build --force-recreate --no-deps -d redacao
+# docker compose up --build --force-recreate --no-deps -d llm
+# docker compose up --build --force-recreate --no-deps -d msorm
+
 name: correnem
 
 services:

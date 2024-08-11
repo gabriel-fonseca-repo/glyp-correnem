@@ -25,8 +25,11 @@ public class Redacao extends BaseModel {
   @Column(nullable = false, columnDefinition = "TEXT")
   private String text;
 
-  @Column
+  @Column(nullable = false, columnDefinition = "BOOLEAN DEFAULT FALSE")
   private boolean reviewed = false;
+
+  @Column(nullable = false, columnDefinition = "BOOLEAN DEFAULT FALSE")
+  private boolean finished = false;
 
   @Column
   private int finalScore;
@@ -154,6 +157,15 @@ public class Redacao extends BaseModel {
   }
 
   public void computeAndSetFinalScore() {
-    this.finalScore = this.criteriaScore1 + this.criteriaScore2 + this.criteriaScore3 + this.criteriaScore4 + this.criteriaScore5;
+    this.finalScore =
+      this.criteriaScore1 + this.criteriaScore2 + this.criteriaScore3 + this.criteriaScore4 + this.criteriaScore5;
+  }
+
+  public boolean isFinished() {
+    return finished;
+  }
+
+  public void setFinished(boolean finished) {
+    this.finished = finished;
   }
 }

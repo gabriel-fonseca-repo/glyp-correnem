@@ -31,24 +31,22 @@ public class UsuarioController {
     response.setAction(ResponseAction.NONE);
     try {
 
-      throw new GlypBackendException("O cadastro de usuários está desabilitado.", HttpStatus.FORBIDDEN.value());
+      usuarioService.isCadastroFormComCamposInvalidos(req);
 
-//      usuarioService.isCadastroFormComCamposInvalidos(req);
-//
-//      if (usuarioService.isEmailJaCadastrado(req)) {
-//        response.setMessage("E-mail já cadastrado(s).");
-//        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(response);
-//      }
-//
-//      Usuario novoUsuario = new Usuario();
-//      novoUsuario.setEmail(req.email());
-//      novoUsuario.setNome(req.nome());
-//      novoUsuario.setSenha(BCrypt.hashpw(req.senha(), BCrypt.gensalt()));
-//
-//      usuarioService.save(novoUsuario);
-//      response.setMessage("Usuário cadastrado com sucesso.");
-//
-//      return ResponseEntity.status(HttpStatus.OK).body(response);
+      if (usuarioService.isEmailJaCadastrado(req)) {
+        response.setMessage("E-mail já cadastrado(s).");
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(response);
+      }
+
+      Usuario novoUsuario = new Usuario();
+      novoUsuario.setEmail(req.email());
+      novoUsuario.setNome(req.nome());
+      novoUsuario.setSenha(BCrypt.hashpw(req.senha(), BCrypt.gensalt()));
+
+      usuarioService.save(novoUsuario);
+      response.setMessage("Usuário cadastrado com sucesso.");
+
+      return ResponseEntity.status(HttpStatus.OK).body(response);
     } catch (Exception e) {
       response.setMessage(e.getMessage());
       return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
