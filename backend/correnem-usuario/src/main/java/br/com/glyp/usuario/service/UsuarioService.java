@@ -10,6 +10,10 @@ import br.com.glyp.msorm.web.dto.usuario.CadastrarUsuarioRequest;
 import br.com.glyp.msorm.web.exceptions.GlypBackendException;
 import br.com.glyp.usuario.dao.UsuarioDao;
 import org.apache.http.HttpStatus;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.context.event.ApplicationReadyEvent;
+import org.springframework.context.event.EventListener;
+import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -21,8 +25,22 @@ public class UsuarioService {
 
   private final UsuarioDao usuarioDao;
 
-  public UsuarioService(UsuarioDao usuarioDao) {
+  private final String email;
+
+  private final String nome;
+
+  private final String senha;
+
+  public UsuarioService(
+    UsuarioDao usuarioDao,
+    @Value("${ADM_USER_EMAIL}") String email,
+    @Value("${ADM_USER_NAME}") String nome,
+    @Value("${ADM_USER_PASSWD}") String senha
+  ) {
     this.usuarioDao = usuarioDao;
+    this.email = email;
+    this.nome = nome;
+    this.senha = senha;
   }
 
   public void save(Usuario usuario) {
@@ -54,7 +72,8 @@ public class UsuarioService {
       if (camposInvalidos.size() == 1)
         throw new RuntimeException("O campo " + String.join(", ", camposInvalidos) + " está em branco ou é inválido.");
       else
-        throw new RuntimeException("Os campos " + String.join(", ", camposInvalidos) + " estão em branco ou são inválidos.");
+        throw new RuntimeException("Os campos " + String.join(", ", camposInvalidos) + " estão em branco ou são " +
+          "inválidos.");
     }
 
   }
@@ -64,7 +83,8 @@ public class UsuarioService {
     if (dadosUsuario.isPresent()) {
       return dadosUsuario.get();
     } else {
-      throw new GlypBackendException("Usuário de id '" + claims.idUsuario() + "' não encontrado.", HttpStatus.SC_NOT_FOUND);
+      throw new GlypBackendException("Usuário de id '" + claims.idUsuario() + "' não encontrado.",
+        HttpStatus.SC_NOT_FOUND);
     }
   }
 
@@ -73,7 +93,18 @@ public class UsuarioService {
     if (dadosUsuario.isPresent()) {
       return dadosUsuario.get();
     } else {
-      throw new GlypBackendException("Usuário de id '" + claims.idUsuario() + "' não encontrado.", HttpStatus.SC_NOT_FOUND);
+      throw new GlypBackendException("Usuário de id '" + claims.idUsuario() + "' não encontrado.",
+        HttpStatus.SC_NOT_FOUND);
     }
+  }
+
+  @EventListener(ApplicationReadyEvent.class)
+  public void createDefaultAdminUser() {
+    Usuario novoUsuario = new Usuario();
+    novoUsuario.setEmail(this.email);
+    novoUsuario.setNome(this.nome);
+    novoUsuario.setSenha(BCrypt.hashpw(this.senha, BCrypt.gensalt()));
+
+    this.save(novoUsuario);
   }
 }
