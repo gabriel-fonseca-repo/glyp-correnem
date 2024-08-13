@@ -33,20 +33,18 @@ public class CreateAdminUserRunner implements CommandLineRunner {
   @Override
   public void run(String... args) throws Exception {
 
+    Usuario usuario = null;
+
     if (usuarioService.isEmailJaCadastrado(this.email)) {
-      Usuario usuario = usuarioService.consultarUsuarioPorEmail(this.email).get();
-      usuario.setNome(this.nome);
-      usuario.setSenha(BCrypt.hashpw(this.senha, BCrypt.gensalt()));
-      usuarioService.save(usuario);
-      return;
+      usuario = usuarioService.consultarUsuarioPorEmail(this.email).get();
+    } else {
+      Usuario novoUsuario = new Usuario();
+      novoUsuario.setEmail(this.email);
     }
 
-    Usuario novoUsuario = new Usuario();
-    novoUsuario.setEmail(this.email);
-    novoUsuario.setNome(this.nome);
-    novoUsuario.setSenha(BCrypt.hashpw(this.senha, BCrypt.gensalt()));
-
-    this.usuarioService.save(novoUsuario);
+    usuario.setNome(this.nome);
+    usuario.setSenha(BCrypt.hashpw(this.senha, BCrypt.gensalt()));
+    this.usuarioService.save(usuario);
   }
 
 }
