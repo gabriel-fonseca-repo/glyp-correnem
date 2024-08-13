@@ -10,10 +10,6 @@ import br.com.glyp.msorm.web.dto.usuario.CadastrarUsuarioRequest;
 import br.com.glyp.msorm.web.exceptions.GlypBackendException;
 import br.com.glyp.usuario.dao.UsuarioDao;
 import org.apache.http.HttpStatus;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.context.event.ApplicationReadyEvent;
-import org.springframework.context.event.EventListener;
-import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -25,22 +21,8 @@ public class UsuarioService {
 
   private final UsuarioDao usuarioDao;
 
-  private final String email;
-
-  private final String nome;
-
-  private final String senha;
-
-  public UsuarioService(
-    UsuarioDao usuarioDao,
-    @Value("${ADM_USER_EMAIL}") String email,
-    @Value("${ADM_USER_NAME}") String nome,
-    @Value("${ADM_USER_PASSWD}") String senha
-  ) {
+  public UsuarioService(UsuarioDao usuarioDao) {
     this.usuarioDao = usuarioDao;
-    this.email = email;
-    this.nome = nome;
-    this.senha = senha;
   }
 
   public void save(Usuario usuario) {
@@ -98,13 +80,4 @@ public class UsuarioService {
     }
   }
 
-  @EventListener(ApplicationReadyEvent.class)
-  public void createDefaultAdminUser() {
-    Usuario novoUsuario = new Usuario();
-    novoUsuario.setEmail(this.email);
-    novoUsuario.setNome(this.nome);
-    novoUsuario.setSenha(BCrypt.hashpw(this.senha, BCrypt.gensalt()));
-
-    this.save(novoUsuario);
-  }
 }
