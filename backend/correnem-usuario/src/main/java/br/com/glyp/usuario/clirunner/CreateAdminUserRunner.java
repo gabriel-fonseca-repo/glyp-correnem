@@ -33,6 +33,11 @@ public class CreateAdminUserRunner implements CommandLineRunner {
   @Override
   public void run(String... args) throws Exception {
 
+    if (usuarioService.isEmailJaCadastrado(this.email)) {
+      System.out.println("Usuário administrador já cadastrado.");
+      return;
+    }
+
     Usuario novoUsuario = new Usuario();
     novoUsuario.setEmail(this.email);
     novoUsuario.setNome(this.nome);

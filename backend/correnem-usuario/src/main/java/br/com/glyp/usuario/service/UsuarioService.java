@@ -41,6 +41,10 @@ public class UsuarioService {
     return usuarioDao.isEmailJaCadastrado(req.email());
   }
 
+  public boolean isEmailJaCadastrado(String email) {
+    return usuarioDao.isEmailJaCadastrado(email);
+  }
+
   public void isCadastroFormComCamposInvalidos(CadastrarUsuarioRequest req) {
 
     List<String> camposInvalidos = new ArrayList<>();
