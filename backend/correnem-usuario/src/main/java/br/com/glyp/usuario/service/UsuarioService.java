@@ -33,8 +33,12 @@ public class UsuarioService {
     return ((req == null) || (req.email() == null || req.email().isBlank()) || (req.senha() == null || req.senha().isBlank()));
   }
 
-  public Optional<UsuarioJwtCreationQuery> consultarUsuarioPorEmail(String email) {
+  public Optional<UsuarioJwtCreationQuery> consultarJwtUsuarioPorEmail(String email) {
     return usuarioDao.findByEmail(email, UsuarioJwtCreationQuery.class);
+  }
+
+  public Optional<Usuario> consultarUsuarioPorEmail(String email) {
+    return usuarioDao.findByEmail(email, Usuario.class);
   }
 
   public boolean isEmailJaCadastrado(CadastrarUsuarioRequest req) {

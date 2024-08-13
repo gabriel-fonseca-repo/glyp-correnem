@@ -46,7 +46,7 @@ public class AuthController {
       return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
     }
 
-    return usuarioService.consultarUsuarioPorEmail(req.email()).map(usuario -> {
+    return usuarioService.consultarJwtUsuarioPorEmail(req.email()).map(usuario -> {
       if (!BCrypt.checkpw(req.senha(), usuario.getSenha())) {
         response.setMessage("Não foi encontrado usuário cadastrado com as credenciais fornecidas.");
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(response);
@@ -56,8 +56,8 @@ public class AuthController {
       response.setIdUsuario(usuario.getId());
       String tokenJwt = jwtService.gerarTokenJwt(usuario);
       HttpCookie cookie = ResponseCookie.from(GlypCookies.JWT, tokenJwt)
-          // .secure(true)
-          .httpOnly(true).maxAge(Duration.ofMinutes(60)).path("/").sameSite(Cookie.SameSite.STRICT.attributeValue()).build();
+                                        // .secure(true)
+                                        .httpOnly(true).maxAge(Duration.ofMinutes(60)).path("/").sameSite(Cookie.SameSite.STRICT.attributeValue()).build();
       return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, cookie.toString()).body(response);
 
     }).orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).body(response));
@@ -92,9 +92,11 @@ public class AuthController {
   @GetMapping("/invalidartoken")
   public ResponseEntity<Map<String, Object>> deslogar() {
     return ResponseEntity.status(HttpStatus.OK).header(HttpHeaders.SET_COOKIE, ResponseCookie.from(GlypCookies.JWT, "")
-        // .secure(true)
-        // .sameSite(Cookie.SameSite.LAX.attributeValue())
-        .httpOnly(true).maxAge(Duration.ofMinutes(60)).path("/").build().toString()).body(Map.of("message", "Logout realizado com sucesso.", "action", ResponseAction.LOGOUT));
+                                                                                             // .secure(true)
+                                                                                             // .sameSite(Cookie
+                                                                                             // .SameSite.LAX
+                                                                                             // .attributeValue())
+                                                                                             .httpOnly(true).maxAge(Duration.ofMinutes(60)).path("/").build().toString()).body(Map.of("message", "Logout realizado com sucesso.", "action", ResponseAction.LOGOUT));
   }
 
 }
