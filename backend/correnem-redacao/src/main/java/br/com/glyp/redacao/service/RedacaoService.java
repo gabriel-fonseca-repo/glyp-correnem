@@ -45,19 +45,34 @@ public class RedacaoService {
     Optional<Usuario> usuario = usuarioDao.findById(claims.idUsuario());
     if (usuario.isPresent()) {
       Optional<Redacao> redacao = redacaoDao.findById(idRedacao);
-      if (redacao.isPresent()) {
-        if (redacao.get().getUsuario().getId().equals(usuario.get().getId())) {
-          return redacao.get();
-        } else {
-          throw new GlypBackendException("Redação de id '" + idRedacao + "' não pertence ao usuário logado.",
-            HttpStatus.SC_FORBIDDEN);
-        }
-      } else {
-        throw new GlypBackendException("Redação de id '" + idRedacao + "' não encontrado.", HttpStatus.SC_NOT_FOUND);
-      }
+      return getRedacao(idRedacao, usuario, redacao);
     } else {
       throw new GlypBackendException("Usuário de id '" + claims.idUsuario() + "' não encontrado.",
         HttpStatus.SC_NOT_FOUND);
+    }
+  }
+
+  public Redacao findByIdJoinAluno(UsuarioResponsavelHeader claims, Long idRedacao) {
+    Optional<Usuario> usuario = usuarioDao.findById(claims.idUsuario());
+    if (usuario.isPresent()) {
+      Optional<Redacao> redacao = redacaoDao.getRedacaoWithAlunoById(idRedacao);
+      return getRedacao(idRedacao, usuario, redacao);
+    } else {
+      throw new GlypBackendException("Usuário de id '" + claims.idUsuario() + "' não encontrado.",
+        HttpStatus.SC_NOT_FOUND);
+    }
+  }
+
+  private Redacao getRedacao(Long idRedacao, Optional<Usuario> usuario, Optional<Redacao> redacao) {
+    if (redacao.isPresent()) {
+      if (redacao.get().getUsuario().getId().equals(usuario.get().getId())) {
+        return redacao.get();
+      } else {
+        throw new GlypBackendException("Redação de id '" + idRedacao + "' não pertence ao usuário logado.",
+          HttpStatus.SC_FORBIDDEN);
+      }
+    } else {
+      throw new GlypBackendException("Redação de id '" + idRedacao + "' não encontrado.", HttpStatus.SC_NOT_FOUND);
     }
   }
 

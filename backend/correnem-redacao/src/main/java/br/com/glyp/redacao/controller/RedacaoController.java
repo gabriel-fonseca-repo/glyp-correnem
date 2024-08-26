@@ -72,7 +72,7 @@ public class RedacaoController {
 
       return ResponseEntity.ok(
         Map.of(
-          "redacao", redacaoService.findById(claims, Long.parseLong(idRedacao))
+          "redacao", redacaoService.findByIdJoinAluno(claims, Long.parseLong(idRedacao))
         )
       );
     } catch (GlypBackendException ge) {
