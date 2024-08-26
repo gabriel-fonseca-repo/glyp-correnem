@@ -16,6 +16,10 @@ public class Redacao extends BaseModel {
   @JoinColumn(name = "id_usuario", foreignKey = @ForeignKey(name = "fk_usuario_redacao_usuario"))
   private Usuario usuario;
 
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "id_aluno", foreignKey = @ForeignKey(name = "fk_aluno_redacao_aluno"))
+  private Aluno aluno;
+
   @Column
   private String title;
 
@@ -167,5 +171,13 @@ public class Redacao extends BaseModel {
 
   public void setFinished(boolean finished) {
     this.finished = finished;
+  }
+
+  public Aluno getAluno() {
+    return aluno;
+  }
+
+  public void setAluno(Aluno aluno) {
+    this.aluno = aluno;
   }
 }

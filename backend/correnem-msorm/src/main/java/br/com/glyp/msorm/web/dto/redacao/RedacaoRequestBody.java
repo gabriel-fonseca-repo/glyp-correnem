@@ -12,6 +12,7 @@ public record RedacaoRequestBody(
   int criteriaScore3,
   int criteriaScore4,
   int criteriaScore5,
-  String comments
+  String comments,
+  String nomeAluno
 ) {
 }

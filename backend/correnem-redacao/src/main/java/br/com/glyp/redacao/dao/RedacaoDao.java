@@ -12,14 +12,17 @@ import org.springframework.stereotype.Repository;
 public interface RedacaoDao extends JpaRepository<Redacao, Long> {
 
   @Query("""
-          SELECT  r.id as id,
-                  r.finalScore as finalScore,
-                  r.title as title,
-                  a.dataInclusao as dataInclusao
-          FROM    Redacao r
-          JOIN    r.auditoria a
-          WHERE   r.usuario.id = :idUsuario
-      """)
+        SELECT  r.id as id,
+                r.finalScore as finalScore,
+                r.title as title,
+                r.finished as isFinished,
+                al.nome as aluno,
+                a.dataInclusao as dataInclusao
+        FROM    Redacao r
+        JOIN    r.auditoria a
+        JOIN    r.aluno al
+        WHERE   r.usuario.id = :idUsuario
+    """)
   Page<RedacaoDashboardQuery> findByUsuario(Long idUsuario, Pageable pageable);
 
 }

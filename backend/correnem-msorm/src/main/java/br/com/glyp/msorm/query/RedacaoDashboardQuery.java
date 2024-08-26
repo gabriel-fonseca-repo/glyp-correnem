@@ -12,4 +12,6 @@ public interface RedacaoDashboardQuery {
   OffsetDateTime getDataInclusao();
 
   Boolean getIsFinished();
+
+  String getAluno();
 }

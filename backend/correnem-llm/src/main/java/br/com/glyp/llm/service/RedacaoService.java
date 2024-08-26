@@ -42,7 +42,8 @@ public class RedacaoService {
       redacao.setUsuario(usuario.get());
       return this.corrigirRedacao(redacao);
     } else {
-      throw new GlypBackendException("Usuário de id '" + claims.idUsuario() + "' não encontrado.", HttpStatus.SC_NOT_FOUND);
+      throw new GlypBackendException("Usuário de id '" + claims.idUsuario() + "' não encontrado.",
+        HttpStatus.SC_NOT_FOUND);
     }
 
   }
@@ -55,7 +56,8 @@ public class RedacaoService {
   }
 
   private Redacao extrairSalvarDadosCorrecao(String correcao, Redacao redacao) {
-    Pattern pattern = Pattern.compile("COMPENTENCIA_1: (\\d+)\\nCOMPENTENCIA_2: (\\d+)\\nCOMPENTENCIA_3: (\\d+)\\nCOMPENTENCIA_4: (\\d+)\\nCOMPENTENCIA_5: (\\d+)\\n\\nCOMENTARIOS: (.*)");
+    Pattern pattern = Pattern.compile("COMPENTENCIA_1: (\\d+)\\nCOMPENTENCIA_2: (\\d+)\\nCOMPENTENCIA_3: (\\d+)" +
+      "\\nCOMPENTENCIA_4: (\\d+)\\nCOMPENTENCIA_5: (\\d+)\\n\\nCOMENTARIOS: (.*)");
     Matcher matcher = pattern.matcher(correcao);
 
     if (matcher.find()) {
@@ -80,7 +82,8 @@ public class RedacaoService {
   public void validarFormCorrigirRedacao(CorrecaoRedacaoRequest correcaoRedacaoRequest) {
     List<String> camposInvalidos = new ArrayList<>();
 
-    if (correcaoRedacaoRequest.tema() == null || correcaoRedacaoRequest.tema().isBlank()) camposInvalidos.add("tema");
+    if (correcaoRedacaoRequest.tema() == null || correcaoRedacaoRequest.tema().isBlank())
+      camposInvalidos.add("tema");
     if (correcaoRedacaoRequest.titulo() == null || correcaoRedacaoRequest.titulo().isBlank())
       camposInvalidos.add("titulo");
     if (correcaoRedacaoRequest.texto() == null || correcaoRedacaoRequest.texto().isBlank())
@@ -88,9 +91,11 @@ public class RedacaoService {
 
     if (!camposInvalidos.isEmpty()) {
       if (camposInvalidos.size() == 1)
-        throw new GlypBackendException("O campo " + String.join(", ", camposInvalidos) + " está em branco ou é inválido.", HttpStatus.SC_BAD_REQUEST);
+        throw new GlypBackendException("O campo " + String.join(", ", camposInvalidos) + " está em branco ou é " +
+          "inválido.", HttpStatus.SC_BAD_REQUEST);
       else
-        throw new GlypBackendException("Os campos " + String.join(", ", camposInvalidos) + " estão em branco ou são inválidos.", HttpStatus.SC_BAD_REQUEST);
+        throw new GlypBackendException("Os campos " + String.join(", ", camposInvalidos) + " estão em branco ou são " +
+          "inválidos.", HttpStatus.SC_BAD_REQUEST);
     }
   }
 

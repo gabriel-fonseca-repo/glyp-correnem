@@ -1,11 +1,13 @@
 package br.com.glyp.redacao.service;
 
+import br.com.glyp.msorm.model.Aluno;
 import br.com.glyp.msorm.model.Redacao;
 import br.com.glyp.msorm.model.Usuario;
 import br.com.glyp.msorm.query.RedacaoDashboardQuery;
 import br.com.glyp.msorm.web.UsuarioResponsavelHeader;
 import br.com.glyp.msorm.web.dto.redacao.EditarRedacaoRequest;
 import br.com.glyp.msorm.web.exceptions.GlypBackendException;
+import br.com.glyp.redacao.dao.AlunoDao;
 import br.com.glyp.redacao.dao.RedacaoDao;
 import br.com.glyp.redacao.dao.UsuarioDao;
 import org.apache.http.HttpStatus;
@@ -21,10 +23,12 @@ public class RedacaoService {
   private final RedacaoDao redacaoDao;
 
   private final UsuarioDao usuarioDao;
+  private final AlunoDao alunoDao;
 
-  public RedacaoService(RedacaoDao redacaoDao, UsuarioDao usuarioDao) {
+  public RedacaoService(RedacaoDao redacaoDao, UsuarioDao usuarioDao, AlunoDao alunoDao) {
     this.redacaoDao = redacaoDao;
     this.usuarioDao = usuarioDao;
+    this.alunoDao = alunoDao;
   }
 
   public Page<RedacaoDashboardQuery> findByPageableUserId(UsuarioResponsavelHeader claims, Pageable pageable) {
@@ -63,6 +67,7 @@ public class RedacaoService {
     EditarRedacaoRequest editRedacaoReq
   ) {
     Redacao redacao = this.findById(claims, idRedacao);
+    redacao = this.cadastrarAluno(editRedacaoReq.redacao().nomeAluno(), redacao, claims);
     redacao.setReviewed(true);
     redacao.setFinalScore(editRedacaoReq.redacao().finalScore());
     redacao.setCriteriaScore1(editRedacaoReq.redacao().criteriaScore1());
@@ -71,7 +76,33 @@ public class RedacaoService {
     redacao.setCriteriaScore4(editRedacaoReq.redacao().criteriaScore4());
     redacao.setCriteriaScore5(editRedacaoReq.redacao().criteriaScore5());
     redacao.setComments(editRedacaoReq.redacao().comments());
-    return redacaoDao.save(redacao);
+    return redacaoDao.saveAndFlush(redacao);
+  }
+
+  public Redacao cadastrarAluno(String nomeAluno, Redacao correcao, UsuarioResponsavelHeader claims) {
+    Optional<Usuario> usuario = usuarioDao.findById(claims.idUsuario());
+    Aluno aluno = null;
+
+    if (usuario.isPresent()) {
+
+      Optional<Aluno> optAluno = alunoDao.findByNome(nomeAluno);
+      if (optAluno.isPresent()) {
+        aluno = optAluno.get();
+        aluno.getRedacoes().add(correcao);
+      } else {
+        aluno.setNome(nomeAluno);
+        aluno.getRedacoes().add(correcao);
+        aluno.setUsuario(usuario.get());
+      }
+
+      aluno = alunoDao.saveAndFlush(aluno);
+      correcao.setAluno(aluno);
+      return redacaoDao.saveAndFlush(correcao);
+    } else {
+      throw new GlypBackendException("Usuário de id '" + claims.idUsuario() + "' não encontrado.",
+        HttpStatus.SC_NOT_FOUND);
+    }
+
   }
 
   public Redacao finishRedacao(UsuarioResponsavelHeader claims, Long idRedacao) {

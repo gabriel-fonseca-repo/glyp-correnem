@@ -5,6 +5,7 @@ import br.com.glyp.msorm.web.GlypHeaders;
 import br.com.glyp.msorm.web.UsuarioResponsavelHeader;
 import br.com.glyp.msorm.web.dto.redacao.EditarRedacaoRequest;
 import br.com.glyp.msorm.web.exceptions.GlypBackendException;
+import br.com.glyp.redacao.service.AlunoService;
 import br.com.glyp.redacao.service.RedacaoService;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -21,8 +22,11 @@ public class RedacaoController {
 
   private final RedacaoService redacaoService;
 
-  public RedacaoController(RedacaoService redacaoService) {
+  private final AlunoService alunoService;
+
+  public RedacaoController(RedacaoService redacaoService, AlunoService alunoService) {
     this.redacaoService = redacaoService;
+    this.alunoService = alunoService;
   }
 
   @GetMapping("/redacoes/{size}/{page}")
@@ -69,6 +73,23 @@ public class RedacaoController {
       return ResponseEntity.ok(
         Map.of(
           "redacao", redacaoService.findById(claims, Long.parseLong(idRedacao))
+        )
+      );
+    } catch (GlypBackendException ge) {
+      return ResponseEntity.status(ge.getStatus()).body(Map.of("message", ge.getMessage()));
+    } catch (Exception e) {
+      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of("message", e.getMessage()));
+    }
+  }
+
+  @GetMapping("/alunos")
+  public ResponseEntity<Map<String, Object>> getAlunos(
+    @RequestHeader(GlypHeaders.CLAIMS_USUARIO) UsuarioResponsavelHeader claims
+  ) {
+    try {
+      return ResponseEntity.ok(
+        Map.of(
+          "alunos", alunoService.findByUsuario(claims)
         )
       );
     } catch (GlypBackendException ge) {
