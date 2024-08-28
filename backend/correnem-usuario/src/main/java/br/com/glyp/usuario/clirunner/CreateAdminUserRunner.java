@@ -38,8 +38,8 @@ public class CreateAdminUserRunner implements CommandLineRunner {
     if (usuarioService.isEmailJaCadastrado(this.email)) {
       usuario = usuarioService.consultarUsuarioPorEmail(this.email).get();
     } else {
-      Usuario novoUsuario = new Usuario();
-      novoUsuario.setEmail(this.email);
+      usuario = new Usuario();
+      usuario.setEmail(this.email);
     }
 
     usuario.setNome(this.nome);

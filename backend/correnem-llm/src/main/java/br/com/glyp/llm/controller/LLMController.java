@@ -45,8 +45,13 @@ public class LLMController {
         correcao = alunoService.cadastrarAluno(correcaoRedacaoRequest.nomeAluno(), correcao, claims);
       }
 
+      correcao.getAluno().setRedacoes(null);
+
       return ResponseEntity.ok(
-        Map.of("redacao", correcao)
+        Map.of(
+          "redacao", correcao,
+          "aluno", correcao.getAluno()
+        )
       );
     } catch (GlypBackendException ge) {
       return ResponseEntity.status(ge.getStatus()).body(Map.of("message", ge.getMessage()));

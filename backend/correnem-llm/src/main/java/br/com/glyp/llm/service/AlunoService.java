@@ -35,6 +35,7 @@ public class AlunoService {
     if (usuario.isPresent()) {
 
       Optional<Aluno> optAluno = alunoDao.findByNome(nomeAluno);
+
       if (optAluno.isPresent()) {
         aluno = optAluno.get();
         aluno.getRedacoes().add(correcao);
