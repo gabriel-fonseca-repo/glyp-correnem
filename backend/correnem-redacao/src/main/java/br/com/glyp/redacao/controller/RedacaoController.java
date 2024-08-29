@@ -1,5 +1,6 @@
 package br.com.glyp.redacao.controller;
 
+import br.com.glyp.msorm.model.Redacao;
 import br.com.glyp.msorm.util.DadosValUtil;
 import br.com.glyp.msorm.web.GlypHeaders;
 import br.com.glyp.msorm.web.UsuarioResponsavelHeader;
@@ -70,9 +71,12 @@ public class RedacaoController {
           HttpStatus.BAD_REQUEST.value());
       }
 
+      Redacao redacao = redacaoService.findByIdJoinAluno(claims, Long.parseLong(idRedacao));
+
       return ResponseEntity.ok(
         Map.of(
-          "redacao", redacaoService.findByIdJoinAluno(claims, Long.parseLong(idRedacao))
+          "redacao", redacao,
+          "aluno", redacao.getAluno()
         )
       );
     } catch (GlypBackendException ge) {
