@@ -72,6 +72,7 @@ public class RedacaoController {
       }
 
       Redacao redacao = redacaoService.findByIdJoinAluno(claims, Long.parseLong(idRedacao));
+      redacao.getAluno().setRedacoes(null);
 
       return ResponseEntity.ok(
         Map.of(
