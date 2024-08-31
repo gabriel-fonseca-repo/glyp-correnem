@@ -84,8 +84,6 @@ public class RedacaoService {
 
     if (correcaoRedacaoRequest.tema() == null || correcaoRedacaoRequest.tema().isBlank())
       camposInvalidos.add("tema");
-    if (correcaoRedacaoRequest.titulo() == null || correcaoRedacaoRequest.titulo().isBlank())
-      camposInvalidos.add("titulo");
     if (correcaoRedacaoRequest.texto() == null || correcaoRedacaoRequest.texto().isBlank())
       camposInvalidos.add("texto");
 
