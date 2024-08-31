@@ -94,7 +94,7 @@ public class RedacaoController {
     try {
       return ResponseEntity.ok(
         Map.of(
-          "alunos", alunoService.findByUsuario(claims)
+          "alunos", alunoService.findByUsuario(claims).stream().peek((aluno) -> aluno.setRedacoes(null)).toList()
         )
       );
     } catch (GlypBackendException ge) {
