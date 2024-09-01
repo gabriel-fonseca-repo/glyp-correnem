@@ -105,6 +105,7 @@ public class RedacaoService {
         aluno = optAluno.get();
         aluno.getRedacoes().add(correcao);
       } else {
+        aluno = new Aluno();
         aluno.setNome(nomeAluno);
         aluno.getRedacoes().add(correcao);
         aluno.setUsuario(usuario.get());
