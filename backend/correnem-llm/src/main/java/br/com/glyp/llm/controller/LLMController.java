@@ -1,6 +1,7 @@
 package br.com.glyp.llm.controller;
 
 import br.com.glyp.llm.service.AlunoService;
+import br.com.glyp.llm.service.OcrService;
 import br.com.glyp.llm.service.RedacaoService;
 import br.com.glyp.msorm.model.Redacao;
 import br.com.glyp.msorm.web.GlypHeaders;
@@ -10,6 +11,7 @@ import br.com.glyp.msorm.web.exceptions.GlypBackendException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Map;
 
@@ -21,9 +23,12 @@ public class LLMController {
 
   private final AlunoService alunoService;
 
-  public LLMController(RedacaoService redacaoService, AlunoService alunoService) {
+  private final OcrService ocrService;
+
+  public LLMController(RedacaoService redacaoService, AlunoService alunoService, OcrService ocrService) {
     this.redacaoService = redacaoService;
     this.alunoService = alunoService;
+    this.ocrService = ocrService;
   }
 
   @PostMapping("/corrigir-redacao")
@@ -51,6 +56,25 @@ public class LLMController {
         Map.of(
           "redacao", correcao,
           "aluno", correcao.getAluno()
+        )
+      );
+    } catch (GlypBackendException ge) {
+      return ResponseEntity.status(ge.getStatus()).body(Map.of("message", ge.getMessage()));
+    } catch (Exception e) {
+      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of("message", e.getMessage()));
+    }
+  }
+
+  @PostMapping("/extrair-texto")
+  public ResponseEntity<Map<String, Object>> corrigirRedacao(@RequestParam(value = "image") MultipartFile file) {
+    try {
+      if (file.isEmpty()) {
+        throw new GlypBackendException("Erro na leitura do arquivo.", HttpStatus.BAD_REQUEST.value());
+      }
+
+      return ResponseEntity.ok(
+        Map.of(
+          "extractedText", ocrService.extrairTexto(file)
         )
       );
     } catch (GlypBackendException ge) {
