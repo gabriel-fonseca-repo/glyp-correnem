@@ -8,6 +8,7 @@ import br.com.glyp.msorm.web.GlypHeaders;
 import br.com.glyp.msorm.web.UsuarioResponsavelHeader;
 import br.com.glyp.msorm.web.dto.redacao.CorrecaoRedacaoRequest;
 import br.com.glyp.msorm.web.exceptions.GlypBackendException;
+import org.slf4j.Logger;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,6 +19,8 @@ import java.util.Map;
 @RestController
 @RequestMapping("/llm")
 public class LLMController {
+
+  private static final Logger logger = org.slf4j.LoggerFactory.getLogger(LLMController.class);
 
   private final RedacaoService redacaoService;
 
@@ -61,6 +64,7 @@ public class LLMController {
     } catch (GlypBackendException ge) {
       return ResponseEntity.status(ge.getStatus()).body(Map.of("message", ge.getMessage()));
     } catch (Exception e) {
+      logger.error("Erro ao corrigir redação.", e);
       return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of("message", e.getMessage()));
     }
   }
@@ -80,6 +84,7 @@ public class LLMController {
     } catch (GlypBackendException ge) {
       return ResponseEntity.status(ge.getStatus()).body(Map.of("message", ge.getMessage()));
     } catch (Exception e) {
+      logger.error("Erro ao corrigir redação.", e);
       return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of("message", e.getMessage()));
     }
   }
