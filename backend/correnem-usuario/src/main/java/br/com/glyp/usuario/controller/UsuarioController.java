@@ -8,11 +8,12 @@ import br.com.glyp.msorm.web.dto.usuario.CadastrarUsuarioResponse;
 import br.com.glyp.msorm.web.enumeration.ResponseAction;
 import br.com.glyp.msorm.web.exceptions.GlypBackendException;
 import br.com.glyp.usuario.service.UsuarioService;
-import java.util.Map;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
 
 @RestController
 @RequestMapping("/usuario")
@@ -84,27 +85,18 @@ public class UsuarioController {
     try {
       Usuario usuario = usuarioService.getUsuario(claims);
 
-      req.computeIfPresent(
-        "nome",
-        (k, v) -> {
+      req.computeIfPresent("nome", (k, v) -> {
           usuario.setNome(v);
           return k;
         }
       );
-      req.computeIfPresent(
-        "senhanova",
-        (k, v) -> {
+      req.computeIfPresent("senhanova", (k, v) -> {
           if (!req.containsKey("senhaantiga")) {
-            throw new GlypBackendException(
-              "Para alterar sua senha, você deve informar sua senha atual.",
-              HttpStatus.BAD_REQUEST.value()
-            );
+            throw new GlypBackendException("Para alterar sua senha, você deve informar sua senha atual.",
+              HttpStatus.BAD_REQUEST.value());
           }
           if (!BCrypt.checkpw(req.get("senhaantiga"), usuario.getSenha())) {
-            throw new GlypBackendException(
-              "A senha informada está incorreta.",
-              HttpStatus.BAD_REQUEST.value()
-            );
+            throw new GlypBackendException("A senha informada está incorreta.", HttpStatus.BAD_REQUEST.value());
           }
           usuario.setSenha(BCrypt.hashpw(v, BCrypt.gensalt()));
           return k;
